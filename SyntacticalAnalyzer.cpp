@@ -77,7 +77,7 @@ int SyntacticalAnalyzer::program ()
 	  cout << "There was an Error" << endl;
 	}else if (rule == 1){
 	  cout << "This works, will call define()" << endl;
-	  //define();
+	  define();
 	  //more_defines();
 	}
 
@@ -107,7 +107,37 @@ int SyntacticalAnalyzer::program ()
 	lex->debug << "program function returning " << errors << " errors\n";
 	return errors;
 }      
+
+int SyntacticalAnalyzer::define(){
+	lex->debug << "define function called\n";
+	p2file << "define\n";
+	int errors = 0;
 	
+	int rule = GetRule(1,token);
+	string nonTerminal = "define";
+	print(nonTerminal, token, rule);
+	cout << "Token_name: " << lex->GetTokenName(token) << endl;
+	cout << "Rule: " << rule << endl;
+	cout << "Token: " << token << endl;
+
+	if(rule == -1){
+	  // throw an error
+	  // Write to error message file???
+	  errors += 1;
+	  
+	  cout << "There was an Error" << endl;
+	}else if (rule == 2){
+	  cout << "This works" << endl;
+	}
+	
+	
+	lex->debug << "program function returning " << errors << " errors\n";
+	return errors;
+  
+}
+
+
+
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
   return firstsTable[row][col];
 }
