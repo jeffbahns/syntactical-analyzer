@@ -70,14 +70,14 @@ int SyntacticalAnalyzer::program (){
 	cout << "Token: " << token << endl;
 
 	if(rule == -1){
+	  errors += enforce(token,LPAREN_T);
+	  cout << "There was an Error" << endl;
 	  // throw an error
 	  // Write to error message file???
-	  errors += 1;
-	  
-	  cout << "There was an Error" << endl;
+
 	}else if (rule == 1){
 	  cout << "This works, will call define()" << endl;
-	  define();
+	  errors += define();
 	  //more_defines();
 	}
 
@@ -119,42 +119,34 @@ int SyntacticalAnalyzer::define(){
 	cout << "Token_name: " << lex->GetTokenName(token) << endl;
 	cout << "Rule: " << rule << endl;
 	cout << "Token: " << token << endl;
-
-	if(rule == -1){
-	  // throw an error
-	  // Write to error message file???
-	  errors += 1;
-	  
-	  cout << "There was an Error" << endl;
-	}else if (rule == 2){
-	  
-	  token = lex->GetToken();
-	  errors += enforce(token, DEFINE_T);
-
-	  token = lex->GetToken();
-	  errors += enforce(token, LPAREN_T);
-
-	  token = lex->GetToken();
-	  errors += enforce(token, IDENT_T);
-
-	  param_list();
-
-	  token = lex->GetToken();
-	  errors += enforce(token, RPAREN_T);
-
-	  stmt();
-
-	  stmt_list();
-
-	  token = lex->GetToken();
-	  errors += enforce(token, RPAREN_T);
-
-	  token = lex->GetToken();
-	  rule = GetRule(1, token);
-	  //print function for end
-	}
 	
+	//In this case, the Rule will be 2. Always.
+	  
+	token = lex->GetToken();
+	errors += enforce(token, DEFINE_T);
 	
+	token = lex->GetToken();
+	errors += enforce(token, LPAREN_T);
+	
+	token = lex->GetToken();
+	errors += enforce(token, IDENT_T);
+	
+	errors += param_list();
+	
+	token = lex->GetToken();
+	errors += enforce(token, RPAREN_T);
+	
+	errors += stmt();
+
+	errors += stmt_list();
+	
+	token = lex->GetToken();
+	errors += enforce(token, RPAREN_T);
+	
+	//print function for end
+	
+	  
+	cout << "Errrors: " << errors << endl;
 	lex->debug << "program function returning " << errors << " errors\n";
 	return errors;
   
@@ -219,7 +211,8 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
 
 int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
   int errors = 0;
-  
+  cout << "Bam" << endl;
+  cout << "Token: " << lex->GetTokenName(token) << endl;
   if(token == expected){
     return errors;
   }
@@ -227,6 +220,7 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
     while(token != expected){
       token = lex->GetToken();
       errors += 1;
+      cout << "more errors: " << errors << endl;
     }
     return errors;
   }
