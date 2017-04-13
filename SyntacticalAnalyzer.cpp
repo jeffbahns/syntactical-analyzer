@@ -135,10 +135,35 @@ int SyntacticalAnalyzer::stmt(){
 		token = lex->GetToken();	//Get the token in the next nonterminal
 	}
 	return errors;
-
 }
       
+
+
+/**
+ * Pre	The first token of the stmt_list has already been read in.
+ * Post	The first token of the next nonterminal will be read in by this function.
+ */
+int SyntacticalAnalyzer::stmt_list(){
+	int rule = GetRule(3, token);
+	int errors = 0;
+	string nonTerminal = "stmt_list";
+	print(nonTerminal, token, rule);
+
+	if(rule == -1){
+		//throw an error
+		//Write to error message file???
+		errors++;
+	} else if(rule == 5){
+		//stmt();
+		stmt_list();
+		token = lex->GetToken();
+	} else if (rule == 6){
+		return errors;
+	}
+	return errors;
+}
 	
+
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
   return firstsTable[row][col];
 }
