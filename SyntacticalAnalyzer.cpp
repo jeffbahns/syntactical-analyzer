@@ -14,6 +14,7 @@
 using namespace std;
 
 
+  
 
 int firstsTable[][33] =
   {{0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1},
@@ -52,8 +53,7 @@ SyntacticalAnalyzer::~SyntacticalAnalyzer ()
 	delete lex;
 }
 
-int SyntacticalAnalyzer::program ()
-{
+int SyntacticalAnalyzer::program (){
 /********************************************************************************/
 /* This function will								*/
 /********************************************************************************/
@@ -127,7 +127,31 @@ int SyntacticalAnalyzer::define(){
 	  
 	  cout << "There was an Error" << endl;
 	}else if (rule == 2){
-	  cout << "This works" << endl;
+	  
+	  token = lex->GetToken();
+	  errors += enforce(token, DEFINE_T);
+
+	  token = lex->GetToken();
+	  errors += enforce(token, LPAREN_T);
+
+	  token = lex->GetToken();
+	  errors += enforce(token, IDENT_T);
+
+	  param_list();
+
+	  token = lex->GetToken();
+	  errors += enforce(token, RPAREN_T);
+
+	  stmt();
+
+	  stmt_list();
+
+	  token = lex->GetToken();
+	  errors += enforce(token, RPAREN_T);
+
+	  token = lex->GetToken();
+	  rule = GetRule(1, token);
+	  //print function for end
 	}
 	
 	
@@ -136,8 +160,45 @@ int SyntacticalAnalyzer::define(){
   
 }
 
+int SyntacticalAnalyzer::more_defines(){
+
+}
+
+int SyntacticalAnalyzer::stmt_list(){
+}
+
+int SyntacticalAnalyzer::stmt(){
+}
+
+int SyntacticalAnalyzer::literal(){
+  
+}
+
+int SyntacticalAnalyzer::quoted_lit(){
+
+}
+
+int SyntacticalAnalyzer::more_tokens(){
+
+}
+
+int SyntacticalAnalyzer::param_list(){
+
+}
+
+int SyntacticalAnalyzer::else_part(){
+
+}
 
 
+int SyntacticalAnalyzer::action(){
+
+
+}
+
+int SyntacticalAnalyzer::any_other_token(){
+
+}
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
   return firstsTable[row][col];
 }
@@ -154,3 +215,22 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
   p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
   
 }
+
+
+int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
+  int errors = 0;
+  
+  if(token == expected){
+    return errors;
+  }
+  else{
+    while(token != expected){
+      token = lex->GetToken();
+      errors += 1;
+    }
+    return errors;
+  }
+
+}
+
+  

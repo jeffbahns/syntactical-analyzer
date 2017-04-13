@@ -25,7 +25,7 @@ class SyntacticalAnalyzer
 	token_type token;
 	int program();
 	int define();
-	int more_deines();
+	int more_defines();
 	int stmt_list();
 	int stmt();
 	int literal();
@@ -38,6 +38,7 @@ class SyntacticalAnalyzer
 	int GetRule(int, token_type);
 	void print(string, token_type, int);
 	void ending(string, token_type, int);
+	int enforce(token_type, token_type);
 };
 	
 #endif
