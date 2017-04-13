@@ -131,7 +131,7 @@ int SyntacticalAnalyzer::stmt(){
 	} else if (rule == 9){
 		//action();
 		token = lex->GetToken();	//Get the RPAREN_T
-		//Check to make sure token == RPAREN_T
+		//enforce(token, RPAREN_T);
 		token = lex->GetToken();	//Get the token in the next nonterminal
 	}
 	return errors;
