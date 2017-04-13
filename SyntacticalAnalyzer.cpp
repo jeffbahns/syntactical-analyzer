@@ -106,7 +106,38 @@ int SyntacticalAnalyzer::program ()
 
 	lex->debug << "program function returning " << errors << " errors\n";
 	return errors;
-}      
+}
+
+
+/**
+ * Pre: the first token has already been read in
+ * Post: The first token of the next nonterminal will be read in at the end
+ * 	 of the function.
+ **/
+int SyntacticalAnalyzer::stmt(){
+	int rule = GetRule(4,token);
+	int errors = 0;
+	string nonTerminal = "stmt";
+	print(nonTerminal, token, rule);
+
+	if(rule == -1){
+	  // throw an error
+	  // Write to error message file???
+	  errors++;
+	} else if (rule == 7){
+		//literal();	
+	} else if (rule == 8){
+		token = lex->GetToken();	//Get the token in the next nonterminal
+	} else if (rule == 9){
+		//action();
+		token = lex->GetToken();	//Get the RPAREN_T
+		//Check to make sure token == RPAREN_T
+		token = lex->GetToken();	//Get the token in the next nonterminal
+	}
+	return errors;
+
+}
+      
 	
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
   return firstsTable[row][col];
