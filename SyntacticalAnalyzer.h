@@ -25,6 +25,7 @@ class SyntacticalAnalyzer
 	token_type token;
 	int program ();
 	int literal ();
+	int quoted_lit ();
 	int GetRule(int, token_type);
 	void print(string, token_type, int);
 	void ending(string, token_type, int);
