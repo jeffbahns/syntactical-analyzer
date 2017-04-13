@@ -106,6 +106,7 @@ int SyntacticalAnalyzer::program (){
 
 	lex->debug << "program function returning " << errors << " errors\n";
 	return errors;
+
 }      
 
 int SyntacticalAnalyzer::define(){
@@ -152,15 +153,6 @@ int SyntacticalAnalyzer::define(){
   
 }
 
-int SyntacticalAnalyzer::more_defines(){
-
-}
-
-int SyntacticalAnalyzer::stmt_list(){
-}
-
-int SyntacticalAnalyzer::stmt(){
-}
 
 int SyntacticalAnalyzer::literal(){
   
@@ -191,7 +183,90 @@ int SyntacticalAnalyzer::action(){
 int SyntacticalAnalyzer::any_other_token(){
 
 }
+
+
+
+/**
+ * Pre: the first token has already been read in
+ * Post: The first token of the next nonterminal will be read in at the end
+ * 	 of the function.
+ **/
+int SyntacticalAnalyzer::stmt(){
+	int rule = GetRule(4,token);
+	int errors = 0;
+	string nonTerminal = "stmt";
+	print(nonTerminal, token, rule);
+
+	if(rule == -1){
+	  // throw an error
+	  // Write to error message file???
+	  errors++;
+	} else if (rule == 7){
+		//literal();	
+	} else if (rule == 8){
+		token = lex->GetToken();	//Get the token in the next nonterminal
+	} else if (rule == 9){
+		//action();
+		token = lex->GetToken();	//Get the RPAREN_T
+		//errors += enforce(token, RPAREN_T);
+		token = lex->GetToken();	//Get the token in the next nonterminal
+	}
+	return errors;
+}
+      
+
+
+/**
+ * Pre	The first token of the stmt_list has already been read in.
+ * Post	The first token of the next nonterminal will be read in by this function.
+ */
+int SyntacticalAnalyzer::stmt_list(){
+	int rule = GetRule(3, token);
+	int errors = 0;
+	string nonTerminal = "stmt_list";
+	print(nonTerminal, token, rule);
+
+	if(rule == -1){
+		//throw an error
+		//Write to error message file???
+		errors++;
+	} else if(rule == 5){
+		//stmt();
+		stmt_list();
+		token = lex->GetToken();
+	} else if (rule == 6){
+		//Do nothing since it's Lambda
+	}
+	return errors;
+}
+
+/**
+ * Pre:		The first token has already been read in
+ * Post: 	The first token of the proceduring nonterminal will be read in.
+ **/
+int SyntacticalAnalyzer::more_defines(){
+	int rule = GetRule(2, token);
+	int errors = 0;
+	string nonTerminal = "more_defines";
+	print(nonTerminal, token, rule);
+	if(rule == -1){
+		//Throw an error
+		//Write an error message file?
+		errors += 1;
+		cout << "There was an error from more_defines()" << endl;
+	} else if (rule == 3){
+		//define();
+		more_defines();
+		token = lex->GetToken();
+	} else if (rule == 4){
+		return errors;
+	}
+	return errors;
+}
+	
+
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
+
   return firstsTable[row][col];
 }
 

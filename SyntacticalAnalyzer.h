@@ -23,6 +23,7 @@ class SyntacticalAnalyzer
 	LexicalAnalyzer * lex;
 	ofstream p2file;
 	token_type token;
+
 	int program();
 	int define();
 	int more_defines();
