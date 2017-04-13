@@ -24,6 +24,7 @@ class SyntacticalAnalyzer
 	ofstream p2file;
 	token_type token;
 	int program ();
+	int more_defines();
 	int GetRule(int, token_type);
 	void print(string, token_type, int);
 	void ending(string, token_type, int);

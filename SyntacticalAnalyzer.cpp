@@ -106,9 +106,36 @@ int SyntacticalAnalyzer::program ()
 
 	lex->debug << "program function returning " << errors << " errors\n";
 	return errors;
-}      
+}
+
+
+/**
+ * Pre:		The first token has already been read in
+ * Post: 	The first token of the proceduring nonterminal will be read in.
+ **/
+int SyntacticalAnalyzer::more_defines(){
+	int rule = GetRule(2, token);
+	int errors = 0;
+	string nonTerminal = "more_defines";
+	print(nonTerminal, token, rule);
+	if(rule == -1){
+		//Throw an error
+		//Write an error message file?
+		errors += 1;
+		cout << "There was an error from more_defines()" << endl;
+	} else if (rule == 3){
+		//define();
+		more_defines();
+		token = lex->GetToken();
+	} else if (rule == 4){
+		return errors;
+	}
+	return errors;
+}
+      
 	
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
+
   return firstsTable[row][col];
 }
 
