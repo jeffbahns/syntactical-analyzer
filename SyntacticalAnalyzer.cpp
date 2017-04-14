@@ -485,7 +485,89 @@ int SyntacticalAnalyzer::action(){
 }
 
 int SyntacticalAnalyzer::any_other_token(){
-	return 0;
+	lex->debug << "any_other_token function called\n";
+	p2file << "any_other_token\n";
+	int errors = 0;
+	
+	int rule = GetRule(11, token);
+	string nonTerminal = "any_other_token";
+	print(nonTerminal, token, rule);
+	cout << "Token_name: " << lex->GetTokenName(token) << endl;
+	cout << "Rule: " << rule << endl;
+	cout << "Token: " << token << endl;
+
+	if (rule == -1) {
+		//throw an error
+		//Write to error message file???
+		errors += 1;
+	} else if (rule == 44){
+		token = lex->GetToken();
+		more_tokens();
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 45){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 46){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 47){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 48){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 49){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 50){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 51){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 52){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 53){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 54){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 55){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 56){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 57){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 58){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 59){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 60){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 61){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 62){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 63){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 64){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 65){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 66){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 67){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 68){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 69){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 70){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 71){
+		token = lex->GetToken();	//Get one additional lexeme
+	} else if (rule == 72){
+		token = lex->GetToken();	//Get one additional lexeme
+	}
+
+	rule = GetRule(11, token);
+	ending("any_other_token", token, errors);
+	lex->debug << "any_other_token function returning " << errors << " errors\n";
+	return errors;
+
+
 
 }
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
