@@ -61,7 +61,6 @@ int SyntacticalAnalyzer::program (){
 	p2file << "program\n";
 	int errors = 0;
 	
-	
 	int rule = GetRule(0,token);
 	string nonTerminal = "program";
 	print(nonTerminal, token, rule);
@@ -76,7 +75,6 @@ int SyntacticalAnalyzer::program (){
 	  
 	  cout << "There was an Error" << endl;
 	}else if (rule == 1){
-	  cout << "This works, will call define()" << endl;
 	  errors += define();
 	  errors += more_defines();
 	}
