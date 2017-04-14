@@ -312,14 +312,43 @@ int SyntacticalAnalyzer::more_tokens(){
 		ending("more_tokens", token, errors);
 	}
 
-    lex->debug << "more_tokens function returning " << errors << " errors\n";
-    return errors;
+	lex->debug << "more_tokens function returning " << errors << " errors\n";
+	return errors;
 
 
 }
 
 int SyntacticalAnalyzer::param_list(){
-	return 0;
+	lex->debug << "param_list function called\n";
+	p2file << "param_list\n";
+	int errors = 0;
+	
+	int rule = GetRule(8,token);
+	string nonTerminal = "param_list";
+	print(nonTerminal, token, rule);
+	cout << "Token_name: " << lex->GetTokenName(token) << endl;
+	cout << "Rule: " << rule << endl;
+	cout << "Token: " << token << endl;
+
+	if (rule == -1) {
+		//throw an error
+		//Write to error message file???
+		errors += 1;
+	} else if (rule == 15) {
+		errors += param_list();
+		rule = GetRule(8, token);
+		ending("param_list", token, errors);
+
+	} else if (rule == 16) {
+		rule = GetRule(8, token);
+		ending("param_list", token, errors);
+
+	}
+
+	lex->debug << "param_list function returning " << errors << " errors\n";
+	return errors;
+
+
 
 }
 
