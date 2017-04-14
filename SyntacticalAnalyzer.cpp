@@ -78,7 +78,7 @@ int SyntacticalAnalyzer::program (){
 	}else if (rule == 1){
 	  cout << "This works, will call define()" << endl;
 	  errors += define();
-	  //errors += more_defines();
+	  errors += more_defines();
 	}
 	
 	if (token != EOF_T){
@@ -120,14 +120,14 @@ int SyntacticalAnalyzer::define(){
 	  token = lex->GetToken();
 	  errors += enforce(token, IDENT_T);
 
-	  //param_list();
+	  errors += param_list();
 
 	  token = lex->GetToken();
 	  errors += enforce(token, RPAREN_T);
 
-	  //stmt();
+	  errors += stmt();
 
-	  //stmt_list();
+	  errors += stmt_list();
 
 	  token = lex->GetToken();
 	  errors += enforce(token, RPAREN_T);
@@ -145,42 +145,50 @@ int SyntacticalAnalyzer::define(){
 }
 
 int SyntacticalAnalyzer::more_defines(){
-
+	return 0;
 }
 
 int SyntacticalAnalyzer::stmt_list(){
+	return 0;
 }
 
 int SyntacticalAnalyzer::stmt(){
+	return 0;
 }
 
 int SyntacticalAnalyzer::literal(){
+	return 0;
   
 }
 
 int SyntacticalAnalyzer::quoted_lit(){
+	return 0;
 
 }
 
 int SyntacticalAnalyzer::more_tokens(){
+	return 0;
 
 }
 
 int SyntacticalAnalyzer::param_list(){
+	return 0;
 
 }
 
 int SyntacticalAnalyzer::else_part(){
+	return 0;
 
 }
 
 
 int SyntacticalAnalyzer::action(){
-
+	return 0;
 
 }
 
 int SyntacticalAnalyzer::any_other_token(){
+	return 0;
 
 }
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
