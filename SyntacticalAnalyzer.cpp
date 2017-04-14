@@ -78,31 +78,13 @@ int SyntacticalAnalyzer::program (){
 	}else if (rule == 1){
 	  cout << "This works, will call define()" << endl;
 	  errors += define();
-	  //more_defines();
+	  //errors += more_defines();
 	}
-
-	// token should be in the firsts of program
-	// if true... keep going
-	// if false...
-	// Error message -
-	// 	then keep going or keep getting token until token is
-	// 	in the firsts of program
-
-	//Haven't defined these functions yet, uncoment later
-	//errors += define ();
-	//errors += more_defines ();
-
+	
 	if (token != EOF_T){
 	  lex->ReportError ("Expected end of file; " + lex->GetLexeme ());
 	  errors++;
 	}
-	      
-	// token should be in the follows of program
-	// if true... keep going
-	// if false...
-	// Error message -
-	// 	then keep going or keep getting token until token is
-	// 	in the follows of program
 
 	lex->debug << "program function returning " << errors << " errors\n";
 	cout << "Errors: " << errors << endl;
