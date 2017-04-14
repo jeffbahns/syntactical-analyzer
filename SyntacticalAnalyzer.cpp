@@ -132,11 +132,12 @@ int SyntacticalAnalyzer::define(){
 	token = lex->GetToken();
 	errors += enforce(token, IDENT_T);
 	
-	errors += param_list();
+	//errors += param_list();
 	
 	token = lex->GetToken();
 	errors += enforce(token, RPAREN_T);
-	
+
+	token = lex->GetToken();
 	errors += stmt();
 
 	errors += stmt_list();
@@ -192,26 +193,29 @@ int SyntacticalAnalyzer::any_other_token(){
  * 	 of the function.
  **/
 int SyntacticalAnalyzer::stmt(){
-	int rule = GetRule(4,token);
-	int errors = 0;
-	string nonTerminal = "stmt";
-	print(nonTerminal, token, rule);
-
-	if(rule == -1){
-	  // throw an error
-	  // Write to error message file???
-	  errors++;
-	} else if (rule == 7){
-		//literal();	
-	} else if (rule == 8){
-		token = lex->GetToken();	//Get the token in the next nonterminal
-	} else if (rule == 9){
-		//action();
-		token = lex->GetToken();	//Get the RPAREN_T
-		//errors += enforce(token, RPAREN_T);
-		token = lex->GetToken();	//Get the token in the next nonterminal
-	}
-	return errors;
+    cout << "stmt called\n";
+    int rule = GetRule(4,token);
+    cout << "token cock " << token << endl;
+    int errors = 0;
+    string nonTerminal = "stmt";
+    print(nonTerminal, token, rule);
+    
+    if(rule == -1){
+	// throw an error
+	// Write to error message file???
+	errors++;
+    } else if (rule == 7){
+	//literal();	
+    } else if (rule == 8){
+	//cout << "saw a bitch ass ident_t in stmt\n";
+	token = lex->GetToken();	//Get the token in the next nonterminal
+    } else if (rule == 9){
+	//action();
+	token = lex->GetToken();	//Get the RPAREN_T
+	//errors += enforce(token, RPAREN_T);
+	token = lex->GetToken();	//Get the token in the next nonterminal
+    }
+    return errors;
 }
       
 
@@ -286,16 +290,16 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
 
 int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
   int errors = 0;
-  cout << "Bam" << endl;
+  //cout << "Bam" << endl;
   cout << "Token: " << lex->GetTokenName(token) << endl;
   if(token == expected){
     return errors;
   }
   else{
-    while(token != expected){
+    while(token != expected && token != EOF_T){
       token = lex->GetToken();
       errors += 1;
-      cout << "more errors: " << errors << endl;
+      //cout << "more errors: " << errors << endl;
     }
     return errors;
   }
