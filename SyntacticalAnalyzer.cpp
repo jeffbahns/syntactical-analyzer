@@ -258,10 +258,35 @@ int SyntacticalAnalyzer::literal(){
 }
 
 
-int SyntacticalAnalyzer::quoted_lit(){
-	return 0;
+int SyntacticalAnalyzer::quoted_lit() {
+
+    lex->debug << "quoted_lit function called\n";
+    p2file << "quoted_lit\n";
+    int errors = 0;
+	
+    int rule = GetRule(6,token);
+    string nonTerminal = "quoted_lit";
+    print(nonTerminal, token, rule);
+    cout << "Token_name: " << lex->GetTokenName(token) << endl;
+    cout << "Rule: " << rule << endl;
+    cout << "Token: " << token << endl;
+
+    if (rule == -1) {
+	//throw an error
+	//Write to error message file???
+	errors += 1;
+    } else if (rule == 12) {
+	errors += any_other_token();
+	rule = GetRule(6, token);
+	ending("quoted_lit", token, errors);
+
+    }
+
+    lex->debug << "quoted_lit function returning " << errors << " errors\n";
+    return errors;
 
 }
+
 
 int SyntacticalAnalyzer::more_tokens(){
 	return 0;
