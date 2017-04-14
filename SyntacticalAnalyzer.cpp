@@ -196,7 +196,32 @@ int SyntacticalAnalyzer::stmt_list(){
 
 
 int SyntacticalAnalyzer::stmt(){
-	return 0;
+	int rule = GetRule(4,token);
+	int errors = 0;
+	string nonTerminal = "stmt";
+	print(nonTerminal, token, rule);
+
+	if(rule == -1){
+	  //throw an error
+	  //Write to error message file???
+	  errors++;
+	} else if (rule == 7){
+		literal();	
+	  	rule = GetRule(4, token);
+	  	ending("stmt", token, errors);
+	} else if (rule == 8){
+		token = lex->GetToken();	//Get one additional token
+	  	rule = GetRule(4, token);
+	  	ending("stmt", token, errors);
+	} else if (rule == 9){
+		action();
+		token = lex->GetToken();	//Get the RPAREN_T
+		errors += enforce(token, RPAREN_T);
+		token = lex->GetToken();	//Get one additional token
+	  	rule = GetRule(4, token);
+	  	ending("stmt", token, errors);
+	}
+	return errors;
 }
 
 int SyntacticalAnalyzer::literal(){
