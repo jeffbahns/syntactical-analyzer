@@ -163,7 +163,7 @@ int SyntacticalAnalyzer::more_defines(){
 	  	ending("more_define", token, errors);
 	} else if (rule == 4){
 		token = lex->GetToken();	//Get one additional token
-	  	rule = GetRule(1, token);
+	  	rule = GetRule(2, token);
 	  	ending("more_define", token, errors);
 
 	}
@@ -172,8 +172,29 @@ int SyntacticalAnalyzer::more_defines(){
 
 
 int SyntacticalAnalyzer::stmt_list(){
-	return 0;
+	int rule = GetRule(3, token);
+	int errors = 0;
+	string nonTerminal = "stmt_list";
+	print(nonTerminal, token, rule);
+
+	if(rule == -1){
+		//throw an error
+		//Write to error message file???
+		errors++;
+	} else if(rule == 5){
+		errors += stmt();
+		errors += stmt_list();
+	  	rule = GetRule(3, token);
+	  	ending("stmt_list", token, errors);
+	} else if (rule == 6){
+		token = lex->GetToken();	//Get one additional token
+	  	rule = GetRule(3, token);
+	  	ending("stmt_list", token, errors);
+
+	}
+	return errors;
 }
+
 
 int SyntacticalAnalyzer::stmt(){
 	return 0;
