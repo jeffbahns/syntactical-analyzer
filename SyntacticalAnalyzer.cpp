@@ -77,7 +77,7 @@ int SyntacticalAnalyzer::program (){
 	  cout << "There was an Error" << endl;
 	}else if (rule == 1){
 	  cout << "This works, will call define()" << endl;
-	  define();
+	  erros += define();
 	  //more_defines();
 	}
 
@@ -105,6 +105,7 @@ int SyntacticalAnalyzer::program (){
 	// 	in the follows of program
 
 	lex->debug << "program function returning " << errors << " errors\n";
+	cout << "Errors: " << errors << endl;
 	return errors;
 }      
 
@@ -137,14 +138,14 @@ int SyntacticalAnalyzer::define(){
 	  token = lex->GetToken();
 	  errors += enforce(token, IDENT_T);
 
-	  param_list();
+	  //param_list();
 
 	  token = lex->GetToken();
 	  errors += enforce(token, RPAREN_T);
 
-	  stmt();
+	  //stmt();
 
-	  stmt_list();
+	  //stmt_list();
 
 	  token = lex->GetToken();
 	  errors += enforce(token, RPAREN_T);
@@ -156,6 +157,7 @@ int SyntacticalAnalyzer::define(){
 	
 	
 	lex->debug << "program function returning " << errors << " errors\n";
+	cout << "Errors in define: " << errors << endl;
 	return errors;
   
 }
