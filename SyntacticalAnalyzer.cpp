@@ -36,13 +36,13 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 /* This function will								*/
 /********************************************************************************/
 	lex = new LexicalAnalyzer (filename);
+	token = AND_T;
 	int fnlength = strlen (filename);
 	filename[fnlength-2] = 'p';
 	filename[fnlength-1] = '2';
 	p2file.open (filename);
 	token = lex->GetToken();
 	int errors = program ();
-
 }
 
 SyntacticalAnalyzer::~SyntacticalAnalyzer ()
@@ -110,7 +110,6 @@ int SyntacticalAnalyzer::define(){
 	  
 	  cout << "There was an Error" << endl;
 	}else if (rule == 2){
-	  
 	  token = lex->GetToken();
 	  errors += enforce(token, DEFINE_T);
 
@@ -120,6 +119,7 @@ int SyntacticalAnalyzer::define(){
 	  token = lex->GetToken();
 	  errors += enforce(token, IDENT_T);
 
+	  token = lex->GetToken();
 	  errors += param_list();
 
 	  //token = lex->GetToken(); Unneeded since param_list() should get one extra token
@@ -212,6 +212,10 @@ int SyntacticalAnalyzer::stmt(){
 	  	rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	} else if (rule == 9){
+		cout << "We started with " << lex->GetTokenName(token) << endl;
+		token = lex->GetToken();
+		cout << "After that was a  " << lex->GetTokenName(token) << endl;
+	
 		action();
 		token = lex->GetToken();	//Get the RPAREN_T
 		errors += enforce(token, RPAREN_T);
@@ -341,6 +345,7 @@ int SyntacticalAnalyzer::param_list(){
 		ending("param_list", token, errors);
 
 	} else if (rule == 16) {
+		token = lex->GetToken(); //Didn't think this was necessary for lambas but maybe it is?
 		rule = GetRule(8, token);
 		ending("param_list", token, errors);
 
@@ -604,4 +609,9 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
 
 }
 
-  
+
+token_type SyntacticalAnalyzer::NextToken(){
+	token_type t = lex->GetToken();
+	cout << "Picked up a " << lex->GetTokenName(t) << endl;
+	return t;
+} 

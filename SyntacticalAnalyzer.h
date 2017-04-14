@@ -39,6 +39,7 @@ class SyntacticalAnalyzer
 	void print(string, token_type, int);
 	void ending(string, token_type, int);
 	int enforce(token_type, token_type);
+	token_type NextToken();
 };
 	
 #endif
