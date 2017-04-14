@@ -150,8 +150,8 @@ int SyntacticalAnalyzer::define(){
 	  token = lex->GetToken();
 	  errors += enforce(token, RPAREN_T);
 
-	  token = lex->GetToken();
-	  rule = GetRule(1, token);
+	  //token = lex->GetToken();
+	  //rule = GetRule(1, token);
 	  //print function for end
 	}
 	
