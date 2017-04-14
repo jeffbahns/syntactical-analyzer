@@ -225,9 +225,38 @@ int SyntacticalAnalyzer::stmt(){
 }
 
 int SyntacticalAnalyzer::literal(){
-	return 0;
-  
+	lex->debug << "literal function called\n";
+	p2file << "literal\n";
+    	int errors = 0;
+	
+	int rule = GetRule(5,token);
+	string nonTerminal = "literal";
+	print(nonTerminal, token, rule);
+	cout << "Token_name: " << lex->GetTokenName(token) << endl;
+	cout << "Rule: " << rule << endl;
+	cout << "Token: " << token << endl;
+
+    	if(rule == -1){
+		//throw an error
+		//Write to error message file???
+		errors += 1;
+	  
+		cout << "There was an Error" << endl;
+    	} else if (rule == 10) { // NUMLIT_T
+		token = lex->GetToken();	//Get one additional token
+	  	rule = GetRule(5, token);
+	  	ending("literal", token, errors);
+    	} else if (rule == 11) { // QUOTE_T <quoted_lit>
+		errors += quoted_lit();
+		rule = GetRule(5, token);
+	  	ending("literal", token, errors);
+
+    	}
+
+	lex->debug << "literal function returning " << errors << " errors\n";
+	return errors;
 }
+
 
 int SyntacticalAnalyzer::quoted_lit(){
 	return 0;
