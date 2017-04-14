@@ -158,7 +158,6 @@ int SyntacticalAnalyzer::more_defines(){
 	} else if (rule == 3){
 		define();
 		more_defines();
-	  	token = lex->GetToken();	//Get one additional token
 	  	rule = GetRule(1, token);
 	  	ending("more_define", token, errors);
 	} else if (rule == 4){
