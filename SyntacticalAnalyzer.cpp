@@ -579,7 +579,6 @@ int SyntacticalAnalyzer::GetRule(int row, token_type col){
 
 void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
 
-  //change from cout when we know what the hell we are doing.
   p2file << "Starting <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << endl;
   p2file << "Using rule " << rule << endl;
   
@@ -599,7 +598,7 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
   }
   else{
     while(token != expected){
-     cout << "WE'RE ENFORCING A " << lex->GetTokenName(expected) << "!" << endl;
+     //cout << "WE'RE ENFORCING A " << lex->GetTokenName(expected) << "!" << endl;
       token = NextToken();
       errors += 1;
     }
@@ -609,10 +608,14 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
 }
 
 
+/**
+ * Use this function in place of lex->GetTokenName(). It makes it easier if you want to
+ * add cout statements to print out the tokens as you get them.
+ **/
 token_type SyntacticalAnalyzer::NextToken(){
 	token_type t = lex->GetToken();
-	char c;
-	cout << "Picked up a " << lex->GetTokenName(t) << endl;
-	cin >> c;
+	//char c;
+	//cout << "Picked up a " << lex->GetTokenName(t) << endl;
+	//cin >> c;
 	return t;
 } 
