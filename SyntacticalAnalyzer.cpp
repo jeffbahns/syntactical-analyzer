@@ -215,7 +215,6 @@ int SyntacticalAnalyzer::stmt(){
 	} else if (rule == 9){
 		token = NextToken();
 		action();
-		token = NextToken();	//Get the RPAREN_T
 		errors += enforce(token, RPAREN_T);
 		token = NextToken();	//Get one additional token
 	  	rule = GetRule(4, token);
