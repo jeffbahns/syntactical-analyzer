@@ -14,6 +14,7 @@
 using namespace std;
 
 
+  
 
 int firstsTable[][33] =
     {{0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1},
@@ -52,8 +53,7 @@ SyntacticalAnalyzer::~SyntacticalAnalyzer ()
     delete lex;
 }
 
-int SyntacticalAnalyzer::program ()
-{
+int SyntacticalAnalyzer::program (){
     /********************************************************************************/
     /* This function will								*/
     /********************************************************************************/
@@ -73,7 +73,6 @@ int SyntacticalAnalyzer::program ()
 	// throw an error
 	// Write to error message file???
 	errors += 1;
-	  
 	cout << "There was an Error" << endl;
     }else if (rule == 1){
 	cout << "This works, will call define()" << endl;
@@ -105,6 +104,7 @@ int SyntacticalAnalyzer::program ()
     // 	in the follows of program
 
     lex->debug << "program function returning " << errors << " errors\n";
+    cout << errors << endl;
     return errors;
 }      
 
@@ -134,15 +134,15 @@ int SyntacticalAnalyzer::literal ()
     } else if (rule == 10) { // NUMLIT_T
 	// ? idk, it found numlit so everything is chill i think
     } else if (rule == 11) { // QUOTE_T <quoted_lit>
-	token = 
-	//errors += quoted_lit();
+	//token = 
+	    //errors += quoted_lit();
     }
 
     lex->debug << "literal function returning " << errors << " errors\n";
     return errors;
 }
 
-int quoted_lit() {
+int SyntacticalAnalyzer::quoted_lit() {
     /********************************************************************************/
     /* This function will								*/
     /********************************************************************************/
@@ -161,13 +161,99 @@ int quoted_lit() {
 	// throw an error
 	// Write to error message file???
 	errors += 1;
-    } else if () {
+    } else if (true)/*bad*/ {
 	
     }
 
 
     lex->debug << "quoted_lit function returning " << errors << " errors\n";
     return errors;
+
+}
+
+
+int SyntacticalAnalyzer::define(){
+    lex->debug << "define function called\n";
+    p2file << "define\n";
+    int errors = 0;
+	
+    int rule = GetRule(1,token);
+    string nonTerminal = "define";
+    print(nonTerminal, token, rule);
+    cout << "Token_name: " << lex->GetTokenName(token) << endl;
+    cout << "Rule: " << rule << endl;
+    cout << "Token: " << token << endl;
+
+    if(rule == -1){
+	// throw an error
+	// Write to error message file???
+	errors += 1;
+	  
+	cout << "There was an Error" << endl;
+    }else if (rule == 2){
+	  
+	token = lex->GetToken();
+	errors += enforce(token, DEFINE_T);
+
+	token = lex->GetToken();
+	errors += enforce(token, LPAREN_T);
+
+	token = lex->GetToken();
+	errors += enforce(token, IDENT_T);
+
+	//param_list();
+
+	token = lex->GetToken();
+	errors += enforce(token, RPAREN_T);
+
+	//stmt();
+
+	//stmt_list();
+
+	token = lex->GetToken();
+	errors += enforce(token, RPAREN_T);
+
+	//token = lex->GetToken();
+	//rule = GetRule(1, token);
+	//print function for end
+    }
+	
+	
+    lex->debug << "program function returning " << errors << " errors\n";
+    cout << "Errors in define: " << errors << endl;
+    return errors;
+  
+}
+
+int SyntacticalAnalyzer::more_defines(){
+
+}
+
+int SyntacticalAnalyzer::stmt_list(){
+}
+
+int SyntacticalAnalyzer::stmt(){
+}
+
+int SyntacticalAnalyzer::more_tokens(){
+
+}
+
+int SyntacticalAnalyzer::param_list(){
+
+}
+
+int SyntacticalAnalyzer::else_part(){
+
+}
+
+
+int SyntacticalAnalyzer::action(){
+
+
+}
+
+int SyntacticalAnalyzer::any_other_token(){
 
 }
 
@@ -187,3 +273,22 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
     p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
   
 }
+
+
+int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
+    int errors = 0;
+  
+    if(token == expected){
+	return errors;
+    }
+    else{
+	while(token != expected){
+	    token = lex->GetToken();
+	    errors += 1;
+	}
+	return errors;
+    }
+
+}
+
+  
