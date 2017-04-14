@@ -144,9 +144,32 @@ int SyntacticalAnalyzer::define(){
   
 }
 
+
 int SyntacticalAnalyzer::more_defines(){
-	return 0;
+	int rule = GetRule(2, token);
+	int errors = 0;
+	string nonTerminal = "more_defines";
+	print(nonTerminal, token, rule);
+	if(rule == -1){
+		//Throw an error
+		//Write an error message file?
+		errors += 1;
+		cout << "There was an error from more_defines()" << endl;
+	} else if (rule == 3){
+		define();
+		more_defines();
+	  	token = lex->GetToken();	//Get one additional token
+	  	rule = GetRule(1, token);
+	  	ending("more_define", token, errors);
+	} else if (rule == 4){
+		token = lex->GetToken();	//Get one additional token
+	  	rule = GetRule(1, token);
+	  	ending("more_define", token, errors);
+
+	}
+	return errors;
 }
+
 
 int SyntacticalAnalyzer::stmt_list(){
 	return 0;
