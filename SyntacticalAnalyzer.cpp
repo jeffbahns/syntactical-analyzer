@@ -335,6 +335,7 @@ int SyntacticalAnalyzer::param_list(){
 		//Write to error message file???
 		errors += 1;
 	} else if (rule == 15) {
+		token = lex->GetToken();
 		errors += param_list();
 		rule = GetRule(8, token);
 		ending("param_list", token, errors);
@@ -347,20 +348,140 @@ int SyntacticalAnalyzer::param_list(){
 
 	lex->debug << "param_list function returning " << errors << " errors\n";
 	return errors;
-
-
-
 }
 
 int SyntacticalAnalyzer::else_part(){
-	return 0;
+	lex->debug << "else_part function called\n";
+	p2file << "else_part\n";
+	int errors = 0;
+	
+	int rule = GetRule(9, token);
+	string nonTerminal = "else_part";
+	print(nonTerminal, token, rule);
+	cout << "Token_name: " << lex->GetTokenName(token) << endl;
+	cout << "Rule: " << rule << endl;
+	cout << "Token: " << token << endl;
+
+	if (rule == -1) {
+		//throw an error
+		//Write to error message file???
+		errors += 1;
+	} else if (rule == 17) {
+		errors += stmt();
+		rule = GetRule(9, token);
+		ending("else_part", token, errors);
+
+	} else if (rule == 18) {
+		rule = GetRule(9, token);
+		ending("else_part", token, errors);
+
+	}
+
+	lex->debug << "else_part function returning " << errors << " errors\n";
+	return errors;
+
 
 }
 
 
 int SyntacticalAnalyzer::action(){
-	return 0;
+	lex->debug << "action function called\n";
+	p2file << "action\n";
+	int errors = 0;
+	
+	int rule = GetRule(10, token);
+	string nonTerminal = "action";
+	print(nonTerminal, token, rule);
+	cout << "Token_name: " << lex->GetTokenName(token) << endl;
+	cout << "Rule: " << rule << endl;
+	cout << "Token: " << token << endl;
 
+	if (rule == -1) {
+		//throw an error
+		//Write to error message file???
+		errors += 1;
+	} else if (rule == 19) {
+		token = lex->GetToken();
+		errors += stmt();
+		errors += stmt();
+		errors += else_part();
+	} else if (rule == 20) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 21) {
+		token = lex->GetToken();
+		errors += stmt();
+		errors += stmt();
+	} else if (rule == 22) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 24) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 25) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 26) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 27) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 28) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 29) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 30) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 31) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 32) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 33) {
+		token = lex->GetToken();
+		errors += stmt();
+		errors += stmt_list();
+	} else if (rule == 34) {
+		token = lex->GetToken();
+		errors += stmt();
+		errors += stmt_list();
+	} else if (rule == 35) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 36) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 37) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 38) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 39) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 40) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 41) {
+		token = lex->GetToken();
+		errors += stmt_list();
+	} else if (rule == 42) {
+		token = lex->GetToken();
+		errors += stmt();
+	} else if (rule == 43) {
+		token = lex ->GetToken();
+	}
+
+	rule = GetRule(10, token);
+	ending("action", token, errors);
+	lex->debug << "action function returning " << errors << " errors\n";
+	return errors;
 }
 
 int SyntacticalAnalyzer::any_other_token(){
