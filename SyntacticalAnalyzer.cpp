@@ -41,7 +41,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 	filename[fnlength-2] = 'p';
 	filename[fnlength-1] = '2';
 	p2file.open (filename);
-	token = lex->GetToken();
+	token = NextToken();
 	int errors = program ();
 }
 
@@ -110,29 +110,30 @@ int SyntacticalAnalyzer::define(){
 	  
 	  cout << "There was an Error" << endl;
 	}else if (rule == 2){
-	  token = lex->GetToken();
+	  token = NextToken();
 	  errors += enforce(token, DEFINE_T);
 
-	  token = lex->GetToken();
+	  token = NextToken();
 	  errors += enforce(token, LPAREN_T);
 
-	  token = lex->GetToken();
+	  token = NextToken();
 	  errors += enforce(token, IDENT_T);
 
-	  token = lex->GetToken();
+	  token = NextToken();
 	  errors += param_list();
 
-	  //token = lex->GetToken(); Unneeded since param_list() should get one extra token
+	  //token = NextToken(); Unneeded since param_list() should get one extra token
 	  errors += enforce(token, RPAREN_T);
+	  token = NextToken();
 
 	  errors += stmt();
 
 	  errors += stmt_list();
 
-	  //token = lex->GetToken(); Unneeded since stmt_list() should get one extra token
+	  //token = NextToken(); Unneeded since stmt_list() should get one extra token
 	  errors += enforce(token, RPAREN_T);
 
-	  token = lex->GetToken();	//Get one additional token
+	  token = NextToken();	//Get one additional token
 	  rule = GetRule(1, token);
 	  ending("define", token, errors);
 	}
@@ -208,18 +209,15 @@ int SyntacticalAnalyzer::stmt(){
 	  	rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	} else if (rule == 8){
-		token = lex->GetToken();	//Get one additional token
+		token = NextToken();	//Get one additional token
 	  	rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	} else if (rule == 9){
-		cout << "We started with " << lex->GetTokenName(token) << endl;
-		token = lex->GetToken();
-		cout << "After that was a  " << lex->GetTokenName(token) << endl;
-	
+		token = NextToken();
 		action();
-		token = lex->GetToken();	//Get the RPAREN_T
+		token = NextToken();	//Get the RPAREN_T
 		errors += enforce(token, RPAREN_T);
-		token = lex->GetToken();	//Get one additional token
+		token = NextToken();	//Get one additional token
 	  	rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	}
@@ -245,10 +243,11 @@ int SyntacticalAnalyzer::literal(){
 	  
 		cout << "There was an Error" << endl;
     	} else if (rule == 10) { // NUMLIT_T
-		token = lex->GetToken();	//Get one additional token
+		token = NextToken();	//Get one additional token
 	  	rule = GetRule(5, token);
 	  	ending("literal", token, errors);
     	} else if (rule == 11) { // QUOTE_T <quoted_lit>
+		token = NextToken();
 		errors += quoted_lit();
 		rule = GetRule(5, token);
 	  	ending("literal", token, errors);
@@ -339,13 +338,13 @@ int SyntacticalAnalyzer::param_list(){
 		//Write to error message file???
 		errors += 1;
 	} else if (rule == 15) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += param_list();
 		rule = GetRule(8, token);
 		ending("param_list", token, errors);
 
 	} else if (rule == 16) {
-		token = lex->GetToken(); //Didn't think this was necessary for lambas but maybe it is?
+		//token = NextToken(); //Didn't think this was necessary for lambas but maybe it is?
 		rule = GetRule(8, token);
 		ending("param_list", token, errors);
 
@@ -406,78 +405,78 @@ int SyntacticalAnalyzer::action(){
 		//Write to error message file???
 		errors += 1;
 	} else if (rule == 19) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 		errors += stmt();
 		errors += else_part();
 	} else if (rule == 20) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 21) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 		errors += stmt();
 	} else if (rule == 22) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 24) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 25) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 26) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 27) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 28) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 29) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 30) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 31) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 32) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 33) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 		errors += stmt_list();
 	} else if (rule == 34) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 		errors += stmt_list();
 	} else if (rule == 35) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 36) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 37) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 38) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 39) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 40) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 41) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt_list();
 	} else if (rule == 42) {
-		token = lex->GetToken();
+		token = NextToken();
 		errors += stmt();
 	} else if (rule == 43) {
 		token = lex ->GetToken();
@@ -506,65 +505,65 @@ int SyntacticalAnalyzer::any_other_token(){
 		//Write to error message file???
 		errors += 1;
 	} else if (rule == 44){
-		token = lex->GetToken();
+		token = NextToken();
 		more_tokens();
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 45){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 46){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 47){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 48){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 49){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 50){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 51){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 52){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 53){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 54){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 55){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 56){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 57){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 58){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 59){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 60){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 61){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 62){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 63){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 64){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 65){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 66){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 67){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 68){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 69){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 70){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 71){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	} else if (rule == 72){
-		token = lex->GetToken();	//Get one additional lexeme
+		token = NextToken();	//Get one additional lexeme
 	}
 
 	rule = GetRule(11, token);
@@ -601,7 +600,8 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
   }
   else{
     while(token != expected){
-      token = lex->GetToken();
+     cout << "WE'RE ENFORCING A " << lex->GetTokenName(expected) << "!" << endl;
+      token = NextToken();
       errors += 1;
     }
     return errors;
@@ -612,6 +612,8 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
 
 token_type SyntacticalAnalyzer::NextToken(){
 	token_type t = lex->GetToken();
+	char c;
 	cout << "Picked up a " << lex->GetTokenName(t) << endl;
+	cin >> c;
 	return t;
 } 
