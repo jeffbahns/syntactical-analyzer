@@ -122,19 +122,19 @@ int SyntacticalAnalyzer::define(){
 
 	  errors += param_list();
 
-	  token = lex->GetToken();
+	  //token = lex->GetToken(); Unneeded since param_list() should get one extra token
 	  errors += enforce(token, RPAREN_T);
 
 	  errors += stmt();
 
 	  errors += stmt_list();
 
-	  token = lex->GetToken();
+	  //token = lex->GetToken(); Unneeded since stmt_list() should get one extra token
 	  errors += enforce(token, RPAREN_T);
 
-	  //token = lex->GetToken();
-	  //rule = GetRule(1, token);
-	  //print function for end
+	  token = lex->GetToken();	//Get one additional token
+	  rule = GetRule(1, token);
+	  ending("define", token, errors);
 	}
 	
 	
