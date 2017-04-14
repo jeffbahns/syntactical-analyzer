@@ -500,71 +500,16 @@ int SyntacticalAnalyzer::any_other_token(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
-	} else if (rule == 44){
-		token = NextToken();
-		more_tokens();
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 45){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 46){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 47){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 48){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 49){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 50){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 51){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 52){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 53){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 54){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 55){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 56){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 57){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 58){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 59){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 60){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 61){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 62){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 63){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 64){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 65){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 66){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 67){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 68){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 69){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 70){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 71){
-		token = NextToken();	//Get one additional lexeme
-	} else if (rule == 72){
-		token = NextToken();	//Get one additional lexeme
+	    //throw an error
+	    //Write to error message file???
+	    errors += 1;
+	} else if (rule == 44) {
+	    token = NextToken();
+	    more_tokens();
+	    token = NextToken();	//Get one additional lexeme
+	} else if (rule >= 45 && rule <= 72) {
+	    token = NextToken();	//Get one additional lexeme
 	}
-
 	rule = GetRule(11, token);
 	ending("any_other_token", token, errors);
 	lex->debug << "any_other_token function returning " << errors << " errors\n";
