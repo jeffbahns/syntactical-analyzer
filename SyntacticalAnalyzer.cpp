@@ -161,7 +161,6 @@ int SyntacticalAnalyzer::more_defines(){
 	  	rule = GetRule(1, token);
 	  	ending("more_define", token, errors);
 	} else if (rule == 4){
-		token = lex->GetToken();	//Get one additional token
 	  	rule = GetRule(2, token);
 	  	ending("more_define", token, errors);
 
@@ -186,7 +185,6 @@ int SyntacticalAnalyzer::stmt_list(){
 	  	rule = GetRule(3, token);
 	  	ending("stmt_list", token, errors);
 	} else if (rule == 6){
-		token = lex->GetToken();	//Get one additional token
 	  	rule = GetRule(3, token);
 	  	ending("stmt_list", token, errors);
 
@@ -289,7 +287,34 @@ int SyntacticalAnalyzer::quoted_lit() {
 
 
 int SyntacticalAnalyzer::more_tokens(){
-	return 0;
+	lex->debug << "more_tokens function called\n";
+	p2file << "more_tokens\n";
+	int errors = 0;
+	
+	int rule = GetRule(7,token);
+	string nonTerminal = "more_tokens";
+	print(nonTerminal, token, rule);
+	cout << "Token_name: " << lex->GetTokenName(token) << endl;
+	cout << "Rule: " << rule << endl;
+	cout << "Token: " << token << endl;
+
+	if (rule == -1) {
+		//throw an error
+		//Write to error message file???
+		errors += 1;
+	} else if (rule == 13) {
+		errors += any_other_token();
+		errors += more_tokens();
+		rule = GetRule(7, token);
+		ending("more_tokens", token, errors);
+	} else if (rule == 14) {
+		rule = GetRule(7, token);
+		ending("more_tokens", token, errors);
+	}
+
+    lex->debug << "more_tokens function returning " << errors << " errors\n";
+    return errors;
+
 
 }
 
