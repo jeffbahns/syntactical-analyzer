@@ -217,7 +217,7 @@ int SyntacticalAnalyzer::stmt(){
 	ending("stmt", token, errors);
     } else if (rule == 8){
 	token = NextToken();	//Get one additional token
-	errors += enforce(token, );
+	//errors += enforce(token, );
 	rule = GetRule(4, token);
 	ending("stmt", token, errors);
     } else if (rule == 9){
@@ -426,111 +426,49 @@ int SyntacticalAnalyzer::action(){
     cout << "Rule: " << rule << endl;
     cout << "Token: " << token << endl;
 
-    if (rule == -1) {
+    switch (rule) {
+    case -1:
 	//throw an error
 	//Write to error message file???
+	// CALL ENFORCE UNTIL TOKEN FOUND(?)
 	errors += 1;
-    } else if (rule == 19) {
+	break;
+    case 19:
 	token = NextToken();
-	//errors += enforce(token, );
 	errors += stmt();
 	errors += stmt();
 	errors += else_part();
-    } else if (rule == 20) {
+	break;
+    case 20:
 	token = NextToken();
-	//errors += enforce(token, );
 	errors += stmt();
-    } else if (rule == 21) {
+	break;
+    case 21:
 	token = NextToken();
-	//errors += enforce(token, );
 	errors += stmt();
 	errors += stmt();
-    } else if (rule == 22) {
+	break;
+    case 22 ... 32:
 	token = NextToken();
-	//errors += enforce(token, );
 	errors += stmt();
-    } else if (rule == 24) {
+	break;
+    case 33 ... 34:
 	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 25) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 26) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 27) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 28) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 29) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 30) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 31) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 32) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 33) {
-	token = NextToken();
-	//errors += enforce(token, );
 	errors += stmt();
 	errors += stmt_list();
-    } else if (rule == 34) {
+	break;
+    case 35 ... 41:
 	token = NextToken();
-	//errors += enforce(token, );
+	errors += stmt_list();
+	break;
+    case 42:
+	token = NextToken();
 	errors += stmt();
-	errors += stmt_list();
-    } else if (rule == 35) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 36) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 37) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 38) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 39) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 40) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 41) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt_list();
-    } else if (rule == 42) {
-	token = NextToken();
-	//errors += enforce(token, );
-	errors += stmt();
-    } else if (rule == 43) {
+	break;
+    case 43:
 	token = lex ->GetToken();
+	break;
     }
-
     rule = GetRule(10, token);
     ending("action", token, errors);
     lex->debug << "action function returning " << errors << " errors\n";
