@@ -89,19 +89,25 @@ void RuleMonitor::setLex(LexicalAnalyzer * _lex){
 }
 
 void RuleMonitor::startNonterminal(int ruleNum){
-	activeRules.push(rules[ruleNum -1]);
-	activeNonterminals.push(nonTerminalFromRule(ruleNum));
+	activeRules.push(ruleNum);
+	activeNonterminals.push("    <" + nonTerminalFromRule(ruleNum) + "> ->");
 }
 
 
-void RuleMonitor::endNonterinal(){
+void RuleMonitor::endNonterminal(){
 	string outputString = "";
 	string spacing = "";
 	int numSpaces = activeRules.size();
 	for(int i = 0; i < numSpaces; i++){
-		spacing += "  ";
+		spacing += "| ";
 	}
-	outputString += spacing + "Exp: " + activeRules.top() + "\n";
+	if(activeRules.top() == -1){
+		outputString += spacing + "Exp: "
+			+ nonTerminalFromRule(activeRules.top()) + " -> ??? "
+			+ "(Unable to identify a specific rule)\n";
+	} else{
+		outputString += spacing + "Exp: " + rules[activeRules.top()-1] + "\n";
+	}
 	outputString += spacing + "Rec: " + activeNonterminals.top() + "\n";
 	
 	activeRules.pop();
@@ -139,17 +145,24 @@ string RuleMonitor::nonTerminalFromRule(int ruleNum){
 }
 
 
-void RuleMonitor::addToken(token_type token){
+void RuleMonitor::addNonterminal(string newPiece){
 	if(activeNonterminals.top() != ""){
 		activeNonterminals.top() += " ";
 	}
-	activeNonterminals.top() += lex->GetTokenName(token);
+	activeNonterminals.top() += "<" + newPiece + ">";
+}
+
+void RuleMonitor::addToken(token_type newPiece){
+	if(activeNonterminals.top() != ""){
+		activeNonterminals.top() += " ";
+	}
+	activeNonterminals.top() += lex->GetTokenName(newPiece);
 }
 
 
 void RuleMonitor::printToFile(){
 	int numLines = sequences.size();
-	for(int i = 0; i < numLines; i++){
-		lex->debug << sequences.at(i);
+	for(int i = numLines - 1; i >= 0; i--){
+		lex->debug << sequences[i];
 	}
 }

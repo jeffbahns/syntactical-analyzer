@@ -10,6 +10,7 @@
 #include <cstring>
 #include <fstream>
 #include "SyntacticalAnalyzer.h"
+#include "RuleMonitor.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 /* This function will								*/
 /********************************************************************************/
 	lex = new LexicalAnalyzer (filename);
+	rules.setLex(lex);
 	token = AND_T;
 	int fnlength = strlen (filename);
 	filename[fnlength-2] = 'p';
@@ -63,9 +65,6 @@ int SyntacticalAnalyzer::program (){
 	int rule = GetRule(0,token);
 	string nonTerminal = "program";
 	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
 
 	if(rule == -1){
 	  // throw an error
@@ -73,9 +72,11 @@ int SyntacticalAnalyzer::program (){
 	  errors += 1;
 	  
 	  cout << "There was an Error" << endl;
-	}else if (rule == 1){
-	  errors += define();
-	  errors += more_defines();
+	}
+	rules.startNonterminal(rule);
+	if (rule == 1){
+	  errors += runNonterminal("define");
+	  errors += runNonterminal("more_defines");
 	}
 	
 	if (token != EOF_T){
@@ -84,22 +85,18 @@ int SyntacticalAnalyzer::program (){
 	}
 
 	ending(nonTerminal, token, errors);
-	//lex->debug << "program function returning " << errors << " errors\n";
+	rules.printToFile();
 	cout << "Errors: " << errors << endl;
 	return errors;
 }      
 
 int SyntacticalAnalyzer::define(){
-	//lex->debug << "define function called\n";
 	p2file << "define\n";
 	int errors = 0;
 	
 	int rule = GetRule(1,token);
 	string nonTerminal = "define";
 	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
 
 	if(rule == -1){
 	  // throw an error
@@ -107,7 +104,10 @@ int SyntacticalAnalyzer::define(){
 	  errors += 1;
 	  
 	  cout << "There was an Error" << endl;
-	}else if (rule == 2){
+	}
+	rules.startNonterminal(rule);
+	if (rule == 2){
+    	  rules.addToken(token);
 	  token = NextToken();
 	  errors += enforce(token, DEFINE_T);
 
@@ -118,17 +118,15 @@ int SyntacticalAnalyzer::define(){
 	  errors += enforce(token, IDENT_T);
 
 	  token = NextToken();
-	  errors += param_list();
+	  errors += runNonterminal("param_list");
 
-	  //token = NextToken(); Unneeded since param_list() should get one extra token
 	  errors += enforce(token, RPAREN_T);
 	  token = NextToken();
 
-	  errors += stmt();
+	  errors += runNonterminal("stmt");
 
-	  errors += stmt_list();
+	  errors += runNonterminal("stmt_list");
 
-	  //token = NextToken(); Unneeded since stmt_list() should get one extra token
 	  errors += enforce(token, RPAREN_T);
 
 	  token = NextToken();	//Get one additional token
@@ -154,9 +152,11 @@ int SyntacticalAnalyzer::more_defines(){
 		//Write an error message file?
 		errors += 1;
 		cout << "There was an error from more_defines()" << endl;
-	} else if (rule == 3){
-		define();
-		more_defines();
+	}
+	rules.startNonterminal(rule);
+	if (rule == 3){
+		errors += runNonterminal("define");
+		errors += runNonterminal("more_defines");
 	  	rule = GetRule(1, token);
 	  	ending("more_define", token, errors);
 	} else if (rule == 4){
@@ -178,9 +178,11 @@ int SyntacticalAnalyzer::stmt_list(){
 		//throw an error
 		//Write to error message file???
 		errors++;
-	} else if(rule == 5){
-		errors += stmt();
-		errors += stmt_list();
+	}
+	rules.startNonterminal(rule);
+	if(rule == 5){
+		errors += runNonterminal("stmt");
+		errors += runNonterminal("stmt_list");
 	  	rule = GetRule(3, token);
 	  	ending("stmt_list", token, errors);
 	} else if (rule == 6){
@@ -202,17 +204,21 @@ int SyntacticalAnalyzer::stmt(){
 	  //throw an error
 	  //Write to error message file???
 	  errors++;
-	} else if (rule == 7){
-		literal();	
+	}
+	rules.startNonterminal(rule);
+	if (rule == 7){
+		errors += runNonterminal("literal");	
 	  	rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	} else if (rule == 8){
+    	  	rules.addToken(token);
 		token = NextToken();	//Get one additional token
 	  	rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	} else if (rule == 9){
+    	  	rules.addToken(token);
 		token = NextToken();
-		action();
+		errors += runNonterminal("action");
 		errors += enforce(token, RPAREN_T);
 		token = NextToken();	//Get one additional token
 	  	rule = GetRule(4, token);
@@ -239,13 +245,17 @@ int SyntacticalAnalyzer::literal(){
 		errors += 1;
 	  
 		cout << "There was an Error" << endl;
-    	} else if (rule == 10) { // NUMLIT_T
+    	}
+	rules.startNonterminal(rule);
+	if (rule == 10) { // NUMLIT_T
+    	  	rules.addToken(token);
 		token = NextToken();	//Get one additional token
 	  	rule = GetRule(5, token);
 	  	ending("literal", token, errors);
     	} else if (rule == 11) { // QUOTE_T <quoted_lit>
+    	  	rules.addToken(token);
 		token = NextToken();
-		errors += quoted_lit();
+		errors += runNonterminal("quoted_lit");
 		rule = GetRule(5, token);
 	  	ending("literal", token, errors);
 
@@ -258,30 +268,29 @@ int SyntacticalAnalyzer::literal(){
 
 int SyntacticalAnalyzer::quoted_lit() {
 
-    //lex->debug << "quoted_lit function called\n";
-    p2file << "quoted_lit\n";
-    int errors = 0;
+	//lex->debug << "quoted_lit function called\n";
+	p2file << "quoted_lit\n";
+	int errors = 0;
 	
-    int rule = GetRule(6,token);
-    string nonTerminal = "quoted_lit";
-    print(nonTerminal, token, rule);
-    cout << "Token_name: " << lex->GetTokenName(token) << endl;
-    cout << "Rule: " << rule << endl;
-    cout << "Token: " << token << endl;
+	int rule = GetRule(6,token);
+	string nonTerminal = "quoted_lit";
+	print(nonTerminal, token, rule);
 
-    if (rule == -1) {
-	//throw an error
-	//Write to error message file???
-	errors += 1;
-    } else if (rule == 12) {
-	errors += any_other_token();
-	rule = GetRule(6, token);
-	ending("quoted_lit", token, errors);
+	if (rule == -1) {
+		//throw an error
+		//Write to error message file???
+		errors += 1;
+	}
+	rules.startNonterminal(rule);
+	if (rule == 12) {
+		errors += runNonterminal("any_other_token");
+		rule = GetRule(6, token);
+		ending("quoted_lit", token, errors);
 
-    }
+	}
 
-    //lex->debug << "quoted_lit function returning " << errors << " errors\n";
-    return errors;
+    	//lex->debug << "quoted_lit function returning " << errors << " errors\n";
+    	return errors;
 
 }
 
@@ -294,17 +303,16 @@ int SyntacticalAnalyzer::more_tokens(){
 	int rule = GetRule(7,token);
 	string nonTerminal = "more_tokens";
 	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
 		//throw an error
 		//Write to error message file???
 		errors += 1;
-	} else if (rule == 13) {
-		errors += any_other_token();
-		errors += more_tokens();
+	}
+	rules.startNonterminal(rule);
+	if (rule == 13) {
+		errors += runNonterminal("any_other_token");
+		errors += runNonterminal("more_tokens");
 		rule = GetRule(7, token);
 		ending("more_tokens", token, errors);
 	} else if (rule == 14) {
@@ -334,14 +342,16 @@ int SyntacticalAnalyzer::param_list(){
 		//throw an error
 		//Write to error message file???
 		errors += 1;
-	} else if (rule == 15) {
+	}
+	rules.startNonterminal(rule);
+	if (rule == 15) {
+		cout << "Token: " << token << endl;
 		token = NextToken();
-		errors += param_list();
+		errors += runNonterminal("param_list");
 		rule = GetRule(8, token);
 		ending("param_list", token, errors);
 
 	} else if (rule == 16) {
-		//token = NextToken(); //Didn't think this was necessary for lambas but maybe it is?
 		rule = GetRule(8, token);
 		ending("param_list", token, errors);
 
@@ -367,8 +377,10 @@ int SyntacticalAnalyzer::else_part(){
 		//throw an error
 		//Write to error message file???
 		errors += 1;
-	} else if (rule == 17) {
-		errors += stmt();
+	}
+	rules.startNonterminal(rule);
+	if (rule == 17) {
+		errors += runNonterminal("stmt");
 		rule = GetRule(9, token);
 		ending("else_part", token, errors);
 
@@ -401,81 +413,107 @@ int SyntacticalAnalyzer::action(){
 		//throw an error
 		//Write to error message file???
 		errors += 1;
-	} else if (rule == 19) {
+	}
+	rules.startNonterminal(rule);
+	if (rule == 19) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
-		errors += stmt();
-		errors += else_part();
+		errors += runNonterminal("stmt");
+		errors += runNonterminal("stmt");
+		errors += runNonterminal("else_part");
 	} else if (rule == 20) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 21) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
-		errors += stmt();
+		errors += runNonterminal("stmt");
+		errors += runNonterminal("stmt");
 	} else if (rule == 22) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 24) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 25) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 26) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 27) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 28) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 29) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 30) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 31) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 32) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 33) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
-		errors += stmt_list();
+		errors += runNonterminal("stmt");
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 34) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
-		errors += stmt_list();
+		errors += runNonterminal("stmt");
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 35) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 36) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 37) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 38) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 39) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 40) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 41) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt_list();
+		errors += runNonterminal("stmt_list");
 	} else if (rule == 42) {
+		rules.addToken(token);
 		token = NextToken();
-		errors += stmt();
+		errors += runNonterminal("stmt");
 	} else if (rule == 43) {
+		rules.addToken(token);
 		token = lex ->GetToken();
 	}
 
@@ -501,11 +539,16 @@ int SyntacticalAnalyzer::any_other_token(){
 	    //throw an error
 	    //Write to error message file???
 	    errors += 1;
-	} else if (rule == 44) {
+	}
+	rules.startNonterminal(rule);
+	if (rule == 44) {
+	    rules.addToken(token);
 	    token = NextToken();
-	    more_tokens();
+	    errors += runNonterminal("more_tokens");
+	    rules.addToken(token);
 	    token = NextToken();	//Get one additional lexeme
 	} else if (rule >= 45 && rule <= 72) {
+	    rules.addToken(token);
 	    token = NextToken();	//Get one additional lexeme
 	}
 	rule = GetRule(11, token);
@@ -531,6 +574,7 @@ void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
 void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
   p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
   lex->debug << "\t<" << nonTerm << "> ending\n";
+  rules.endNonterminal();
 }
 
 
@@ -538,11 +582,12 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
   int errors = 0;
   
   if(token == expected){
+    	rules.addToken(token);
     return errors;
   }
   else{
     while(token != expected){
-     //cout << "WE'RE ENFORCING A " << lex->GetTokenName(expected) << "!" << endl;
+      rules.addToken(token);
       token = NextToken();
       errors += 1;
     }
@@ -562,4 +607,34 @@ token_type SyntacticalAnalyzer::NextToken(){
 	//cout << "Picked up a " << lex->GetTokenName(t) << endl;
 	//cin >> c;
 	return t;
+}
+
+
+int SyntacticalAnalyzer::runNonterminal(string n){
+	rules.addNonterminal(n);
+	if(n == "program")
+		return program();
+	if(n == "define")
+		return define();
+	if(n == "more_defines")
+		return more_defines();
+	if(n == "stmt_list")
+		return stmt_list();
+	if(n == "stmt")
+		return stmt();
+	if(n == "literal")
+		return literal();
+	if(n == "quoted_lit")
+		return quoted_lit();
+	if(n == "more_tokens")
+		return more_tokens();
+	if(n == "param_list")
+		return param_list();
+	if(n == "else_part")
+		return else_part();
+	if(n == "action")
+		return action();
+	if(n == "any_other_token")
+		return any_other_token();
+	return 1000000;
 } 

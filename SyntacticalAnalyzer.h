@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include "LexicalAnalyzer.h"
+#include "RuleMonitor.h"
 
 using namespace std;
 
@@ -39,7 +40,9 @@ class SyntacticalAnalyzer
 	void print(string, token_type, int);
 	void ending(string, token_type, int);
 	int enforce(token_type, token_type);
+	int runNonterminal(string n);
 	token_type NextToken();
+	RuleMonitor rules;
 };
 	
 #endif
