@@ -84,6 +84,7 @@ int SyntacticalAnalyzer::program (){
 	  errors++;
 	}
 
+	ending(nonTerminal, token, errors);
 	lex->debug << "program function returning " << errors << " errors\n";
 	cout << "Errors: " << errors << endl;
 	return errors;
