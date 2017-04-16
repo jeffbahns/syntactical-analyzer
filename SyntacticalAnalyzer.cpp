@@ -290,17 +290,11 @@ int SyntacticalAnalyzer::quoted_lit() {
     cout << "Token: " << token << endl;
 
     if (rule == -1) {
-      bool flag=true;
-      while(flag){
-	token = NextToken();
-	if(token==ERROR_T)
-	  errors++;
-	else{
-	  flag=false;
-	  rule = GetRule(6,token);
-	}
-      }
-      
+      int array[30] = {IDENT_T, NUMLIT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T, DEFINE_T, NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T,
+		     STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
+      vector<int>expected_vector(array, array+30);
+      errors += enforce(token,expected_vector);
+      rule = GetRule(6, token);
     } else if (rule == 12) {
 	errors += any_other_token();
 	//rule = GetRule(6, token);
@@ -327,17 +321,12 @@ int SyntacticalAnalyzer::more_tokens(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-	  bool flag=true;
-	  while(flag){
-	    token = NextToken();
-	    if(token==ERROR_T)
-	      errors++;
-	    else{
-	      flag=false;
-	      rule = GetRule(7,token);
-	    }
-	  }
-	  
+	  int array[30] = {IDENT_T, NUMLIT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T, DEFINE_T, NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T,
+			   STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+30);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(7,token);
+
 	} else if (rule == 13) {
 		errors += any_other_token();
 		errors += more_tokens();
@@ -367,17 +356,11 @@ int SyntacticalAnalyzer::param_list(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-	  bool flag=true;
-	  while(flag){
-	    token = NextToken();
-	    if(token==RPAREN_T || token==IDENT_T || EOF_T){
-	      flag=false;
-	      rule = GetRule(8,token);
-	    }	     
-	    else{
-	       errors++;
-	    }
-	  }
+	  int array[2] = {IDENT_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+2);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(8, token);
+
 	  
 	} else if (rule == 15) {
 		token = NextToken();
@@ -549,16 +532,12 @@ int SyntacticalAnalyzer::any_other_token(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-	  bool flag=true;
-	  while(flag){
-	    token = NextToken();
-	    if(token==ERROR_T)
-	      errors++;
-	    else{
-	      flag=false;
-	      rule = GetRule(11,token);
-	    }
-	  }
+
+	  int array[30] = {IDENT_T, NUMLIT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T, DEFINE_T, NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T,
+			   STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+30);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(11, token);
 	  
 	} else if (rule == 44) {
 	    token = NextToken();
