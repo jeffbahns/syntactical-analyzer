@@ -1,8 +1,8 @@
 /********************************************************************************/
-/* Project: 									*/
-/* Author: 									*/
-/* Date: 									*/
-/* Description:									*/
+/* Project: 2, Syntactical Analyzer 	      					*/
+/* Author: Jeff Bahns, Erich Bucher, Jordan Bergero		    		*/
+/* Date: 4/16/2017							    	*/
+/* Description:	A syntactical analyzer built on top of Project 1     	     	*/
 /********************************************************************************/
 
 #include <iostream>
@@ -14,23 +14,23 @@
 
 using namespace std;
 
-
-  
-
 int firstsTable[][33] =
-	{{0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1},
-	{0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -2},
-	{0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, 4},
-	{0, 5, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, 6, 5, -1, -1},
-	{0, 8, 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 9, -2, 7, -1, -1},
-	{0, -2, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -2, 11, -1, -1},
-	{0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, -2, 12, -1, -1},
-	{0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, -1, -1},
-	{0, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16, -1, -1, -1},
-	{0, 17, 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 17, 18, 17, -1, -1},
-	{0, 41, -1, 21, 19, 42, 43, 20, 22, 23, 24, -1, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, -1, -2, -1, -1, -1},
-	{0, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 44, -2, 72, -1, -1}};
+    {{0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1},
+     {0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -2},
+     {0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, 4},
+     {0, 5, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, 6, 5, -1, -1},
+     {0, 8, 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 9, -2, 7, -1, -1},
+     {0, -2, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -2, 11, -1, -1},
+     {0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, -2, 12, -1, -1},
+     {0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, -1, -1},
+     {0, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16, -1, -1, -1},
+     {0, 17, 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 17, 18, 17, -1, -1},
+     {0, 41, -1, 21, 19, 42, 43, 20, 22, 23, 24, -1, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, -1, -2, -1, -1, -1},
+     {0, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 44, -2, 72, -1, -1}};
 
+/**
+ * constructor, takes filename as arg
+**/
 SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 {
 /********************************************************************************/
@@ -47,19 +47,21 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 	int errors = program ();
 }
 
+/**
+ * destructor
+**/
 SyntacticalAnalyzer::~SyntacticalAnalyzer ()
 {
-/********************************************************************************/
-/* This function will								*/
-/********************************************************************************/
-	delete lex;
+    delete lex;
 }
 
+/**
+ * called when non-terminating program() is reached
+ **/
 int SyntacticalAnalyzer::program (){
 /********************************************************************************/
 /* This function will								*/
 /********************************************************************************/
-	p2file << "program\n";
 	int errors = 0;
 	
 	int rule = GetRule(0,token);
@@ -78,11 +80,12 @@ int SyntacticalAnalyzer::program (){
 	  errors += runNonterminal("define");
 	  errors += runNonterminal("more_defines");
 	}
+
 	
-	if (token != EOF_T){
+    if (token != EOF_T){
 	  lex->ReportError ("Expected end of file; " + lex->GetLexeme ());
 	  errors++;
-	}
+    }
 
 	ending(nonTerminal, token, errors);
 	rules.printToFile();
@@ -90,6 +93,9 @@ int SyntacticalAnalyzer::program (){
 	return errors;
 }      
 
+/** 
+ * called when non-terminating define() is reached
+ **/
 int SyntacticalAnalyzer::define(){
 	p2file << "define\n";
 	int errors = 0;
@@ -107,7 +113,7 @@ int SyntacticalAnalyzer::define(){
 	}
 	rules.startNonterminal(rule);
 	if (rule == 2){
-    	  rules.addToken(token);
+      rules.addToken(token);
 	  token = NextToken();
 	  errors += enforce(token, DEFINE_T);
 
@@ -132,16 +138,15 @@ int SyntacticalAnalyzer::define(){
 	  token = NextToken();	//Get one additional token
 	  rule = GetRule(1, token);
 	  ending("define", token, errors);
-	}
+    }
 	
-	
-	//lex->debug << "program function returning " << errors << " errors\n";
 	cout << "Errors in define: " << errors << endl;
 	return errors;
-  
 }
 
-
+/**
+ *  called when non-terminating more_defines() is reached
+ **/
 int SyntacticalAnalyzer::more_defines(){
 	int rule = GetRule(2, token);
 	int errors = 0;
@@ -162,12 +167,13 @@ int SyntacticalAnalyzer::more_defines(){
 	} else if (rule == 4){
 	  	rule = GetRule(2, token);
 	  	ending("more_define", token, errors);
-
-	}
-	return errors;
+    }
+    return errors;
 }
 
-
+/**
+ *  called when non-terminating stmt_list() is reached
+ **/
 int SyntacticalAnalyzer::stmt_list(){
 	int rule = GetRule(3, token);
 	int errors = 0;
@@ -188,12 +194,13 @@ int SyntacticalAnalyzer::stmt_list(){
 	} else if (rule == 6){
 	  	rule = GetRule(3, token);
 	  	ending("stmt_list", token, errors);
-
 	}
-	return errors;
+    return errors;
 }
 
-
+/**
+ * called when non-terminating stmt_() is reached
+ */
 int SyntacticalAnalyzer::stmt(){
 	int rule = GetRule(4,token);
 	int errors = 0;
@@ -227,22 +234,23 @@ int SyntacticalAnalyzer::stmt(){
 	return errors;
 }
 
+/**
+ * called when non-terminating literal() is reached
+ **/
 int SyntacticalAnalyzer::literal(){
-	//lex->debug << "literal function called\n";
-	p2file << "literal\n";
     	int errors = 0;
 	
-	int rule = GetRule(5,token);
-	string nonTerminal = "literal";
-	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
+    int rule = GetRule(5,token);
+    string nonTerminal = "literal";
+    print(nonTerminal, token, rule);
+    cout << "Token_name: " << lex->GetTokenName(token) << endl;
+    cout << "Rule: " << rule << endl;
+    cout << "Token: " << token << endl;
 
-    	if(rule == -1){
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+    if(rule == -1){
+	//throw an error
+	//Write to error message file???
+	errors += 1;
 	  
 		cout << "There was an Error" << endl;
     	}
@@ -261,15 +269,14 @@ int SyntacticalAnalyzer::literal(){
 
     	}
 
-	//lex->debug << "literal function returning " << errors << " errors\n";
 	return errors;
 }
 
 
+/**
+ * called when non-terminating literal() is reached
+ **/
 int SyntacticalAnalyzer::quoted_lit() {
-
-	//lex->debug << "quoted_lit function called\n";
-	p2file << "quoted_lit\n";
 	int errors = 0;
 	
 	int rule = GetRule(6,token);
@@ -289,15 +296,14 @@ int SyntacticalAnalyzer::quoted_lit() {
 
 	}
 
-    	//lex->debug << "quoted_lit function returning " << errors << " errors\n";
-    	return errors;
+    return errors;
 
 }
 
-
+/**
+ * called when non-terminating more_tokens() is reached
+ **/
 int SyntacticalAnalyzer::more_tokens(){
-	//lex->debug << "more_tokens function called\n";
-	p2file << "more_tokens\n";
 	int errors = 0;
 	
 	int rule = GetRule(7,token);
@@ -320,14 +326,13 @@ int SyntacticalAnalyzer::more_tokens(){
 		ending("more_tokens", token, errors);
 	}
 
-	//lex->debug << "more_tokens function returning " << errors << " errors\n";
 	return errors;
-
-
 }
 
+/** 
+ * called when non-terminating param_list() is reached
+ **/
 int SyntacticalAnalyzer::param_list(){
-	//lex->debug << "param_list function called\n";
 	p2file << "param_list\n";
 	int errors = 0;
 	
@@ -354,24 +359,19 @@ int SyntacticalAnalyzer::param_list(){
 	} else if (rule == 16) {
 		rule = GetRule(8, token);
 		ending("param_list", token, errors);
-
 	}
-
-	//lex->debug << "param_list function returning " << errors << " errors\n";
 	return errors;
 }
 
+/**
+ * called when non-terminating else_part() is reached
+ **/
 int SyntacticalAnalyzer::else_part(){
-	//lex->debug << "else_part function called\n";
-	p2file << "else_part\n";
 	int errors = 0;
 	
 	int rule = GetRule(9, token);
 	string nonTerminal = "else_part";
 	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
 		//throw an error
@@ -387,27 +387,20 @@ int SyntacticalAnalyzer::else_part(){
 	} else if (rule == 18) {
 		rule = GetRule(9, token);
 		ending("else_part", token, errors);
-
 	}
 
-	//lex->debug << "else_part function returning " << errors << " errors\n";
 	return errors;
-
-
 }
 
-
+/**
+ * called when non-terminating action() is reached
+ **/
 int SyntacticalAnalyzer::action(){
-	//lex->debug << "action function called\n";
-	p2file << "action\n";
 	int errors = 0;
 	
 	int rule = GetRule(10, token);
 	string nonTerminal = "action";
 	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
 		//throw an error
@@ -415,107 +408,49 @@ int SyntacticalAnalyzer::action(){
 		errors += 1;
 	}
 	rules.startNonterminal(rule);
-	if (rule == 19) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-		errors += runNonterminal("stmt");
-		errors += runNonterminal("else_part");
-	} else if (rule == 20) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 21) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-		errors += runNonterminal("stmt");
-	} else if (rule == 22) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 24) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 25) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 26) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 27) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 28) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 29) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 30) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 31) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 32) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 33) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 34) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 35) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 36) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 37) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 38) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 39) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 40) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 41) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt_list");
-	} else if (rule == 42) {
-		rules.addToken(token);
-		token = NextToken();
-		errors += runNonterminal("stmt");
-	} else if (rule == 43) {
-		rules.addToken(token);
-		token = lex ->GetToken();
-	}
+	switch (rule) {
+    case -1:
+	//throw an error
+	//Write to error message file???
+	// CALL ENFORCE UNTIL TOKEN FOUND(?)
+	errors += 1;
+	break;
+    case 19:
+	token = NextToken();
+	errors += runNonterminal("stmt");
+	errors += runNonterminal("stmt");
+	errors += else_part();
+	break;
+    case 20:
+	token = NextToken();
+	errors += runNonterminal("stmt");
+	break;
+    case 21:
+	token = NextToken();
+	errors += runNonterminal("stmt");
+	errors += runNonterminal("stmt");
+	break;
+    case 22 ... 32:
+	token = NextToken();
+	errors += runNonterminal("stmt");
+	break;
+    case 33 ... 34:
+	token = NextToken();
+	errors += runNonterminal("stmt");
+	errors += runNonterminal("stmt_list");
+	break;
+    case 35 ... 41:
+	token = NextToken();
+	errors += runNonterminal("stmt_list");
+	break;
+    case 42:
+	token = NextToken();
+	errors += runNonterminal("stmt");
+	break;
+    case 43:
+	token = lex ->GetToken();
+	break;
+    }
 
 	rule = GetRule(10, token);
 	ending("action", token, errors);
@@ -523,9 +458,10 @@ int SyntacticalAnalyzer::action(){
 	return errors;
 }
 
+/**
+ * called when non-terminating any_other_token() is reached
+ **/
 int SyntacticalAnalyzer::any_other_token(){
-	//lex->debug << "any_other_token function called\n";
-	p2file << "any_other_token\n";
 	int errors = 0;
 	
 	int rule = GetRule(11, token);
@@ -556,30 +492,39 @@ int SyntacticalAnalyzer::any_other_token(){
 	//lex->debug << "any_other_token function returning " << errors << " errors\n";
 	return errors;
 
-
-
 }
+
+/**
+ * helper, which is used to index the rules table
+ **/
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
-  return firstsTable[row][col];
+    return firstsTable[row][col];
 }
 
+/**
+ * helper, prints starting statements for non-terminators
+ **/
 void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
-
   p2file << "Starting <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << endl;
   p2file << "Using rule " << rule << endl;
   lex->debug << "\t<" << nonTerm << "> started, using rule " << rule << "\n";
   
 }
 
+/** 
+ * helper, prints ending statement
+ **/
 void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
   p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
   lex->debug << "\t<" << nonTerm << "> ending\n";
   rules.endNonterminal();
 }
 
-
+/** 
+ * helper, removes and counts incorrect tokens until expected type is found
+ **/
 int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
-  int errors = 0;
+    int errors = 0;
   
   if(token == expected){
     	rules.addToken(token);
@@ -591,9 +536,8 @@ int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
       token = NextToken();
       errors += 1;
     }
-    return errors;
-  }
 
+  }
 }
 
 
