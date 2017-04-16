@@ -162,7 +162,7 @@ int SyntacticalAnalyzer::more_defines(){
 	string nonTerminal = "more_defines";
 	print(nonTerminal, token, rule);
 	if(rule == -1){
-	  int array[2] = {LAMBDA, LPAREN_T};
+	  int array[1] = {LPAREN_T};
 	  vector<int>expected_vector(array, array+2);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(2,token);
@@ -188,7 +188,7 @@ int SyntacticalAnalyzer::stmt_list(){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-	  int array[6] = {LAMBDA, IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T, RPAREN_T};
+	  int array[5] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T, RPAREN_T};
 	  vector<int>expected_vector(array, array+6);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(3,token);
@@ -214,7 +214,7 @@ int SyntacticalAnalyzer::stmt(){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-	  int array[5] = {LAMBDA, IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T};
+	  int array[4] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T};
 	  vector<int>expected_vector(array, array+5);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(4,token);
@@ -254,7 +254,7 @@ int SyntacticalAnalyzer::literal(){
 	cout << "Token: " << token << endl;
 
     	if(rule == -1){
-	  int array[3] = {LAMBDA, NUMLIT_T, QUOTE_T};
+	  int array[2] = {NUMLIT_T, QUOTE_T};
 	  vector<int>expected_vector(array, array+3);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(5,token);
@@ -409,7 +409,7 @@ int SyntacticalAnalyzer::else_part(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-	  int array[6] = {LAMBDA, NUMLIT_T, IDENT_T, QUOTE_T, LPAREN_T, RPAREN_T};
+	  int array[5] = {NUMLIT_T, IDENT_T, QUOTE_T, LPAREN_T, RPAREN_T};
 	  vector<int>expected_vector(array, array+6);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(9,token);
@@ -445,7 +445,7 @@ int SyntacticalAnalyzer::action(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-	  int array[27] = {LAMBDA, IDENT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T,
+	  int array[26] = {IDENT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T,
 			   NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T, STRINGP_T, PLUS_T, MINUS_T,
 			   DIV_T, MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, RPAREN_T};
 	  vector<int>expected_vector(array, array+27);
@@ -591,6 +591,7 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
   p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
   
 }
+
 
 
 int SyntacticalAnalyzer::enforce(token_type token, vector<int>expected_vector) {
