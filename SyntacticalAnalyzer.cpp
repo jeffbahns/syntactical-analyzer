@@ -57,7 +57,6 @@ int SyntacticalAnalyzer::program (){
 /********************************************************************************/
 /* This function will								*/
 /********************************************************************************/
-	lex->debug << "program function called\n";
 	p2file << "program\n";
 	int errors = 0;
 	
@@ -85,13 +84,13 @@ int SyntacticalAnalyzer::program (){
 	}
 
 	ending(nonTerminal, token, errors);
-	lex->debug << "program function returning " << errors << " errors\n";
+	//lex->debug << "program function returning " << errors << " errors\n";
 	cout << "Errors: " << errors << endl;
 	return errors;
 }      
 
 int SyntacticalAnalyzer::define(){
-	lex->debug << "define function called\n";
+	//lex->debug << "define function called\n";
 	p2file << "define\n";
 	int errors = 0;
 	
@@ -138,7 +137,7 @@ int SyntacticalAnalyzer::define(){
 	}
 	
 	
-	lex->debug << "program function returning " << errors << " errors\n";
+	//lex->debug << "program function returning " << errors << " errors\n";
 	cout << "Errors in define: " << errors << endl;
 	return errors;
   
@@ -223,7 +222,7 @@ int SyntacticalAnalyzer::stmt(){
 }
 
 int SyntacticalAnalyzer::literal(){
-	lex->debug << "literal function called\n";
+	//lex->debug << "literal function called\n";
 	p2file << "literal\n";
     	int errors = 0;
 	
@@ -252,14 +251,14 @@ int SyntacticalAnalyzer::literal(){
 
     	}
 
-	lex->debug << "literal function returning " << errors << " errors\n";
+	//lex->debug << "literal function returning " << errors << " errors\n";
 	return errors;
 }
 
 
 int SyntacticalAnalyzer::quoted_lit() {
 
-    lex->debug << "quoted_lit function called\n";
+    //lex->debug << "quoted_lit function called\n";
     p2file << "quoted_lit\n";
     int errors = 0;
 	
@@ -281,14 +280,14 @@ int SyntacticalAnalyzer::quoted_lit() {
 
     }
 
-    lex->debug << "quoted_lit function returning " << errors << " errors\n";
+    //lex->debug << "quoted_lit function returning " << errors << " errors\n";
     return errors;
 
 }
 
 
 int SyntacticalAnalyzer::more_tokens(){
-	lex->debug << "more_tokens function called\n";
+	//lex->debug << "more_tokens function called\n";
 	p2file << "more_tokens\n";
 	int errors = 0;
 	
@@ -313,14 +312,14 @@ int SyntacticalAnalyzer::more_tokens(){
 		ending("more_tokens", token, errors);
 	}
 
-	lex->debug << "more_tokens function returning " << errors << " errors\n";
+	//lex->debug << "more_tokens function returning " << errors << " errors\n";
 	return errors;
 
 
 }
 
 int SyntacticalAnalyzer::param_list(){
-	lex->debug << "param_list function called\n";
+	//lex->debug << "param_list function called\n";
 	p2file << "param_list\n";
 	int errors = 0;
 	
@@ -348,12 +347,12 @@ int SyntacticalAnalyzer::param_list(){
 
 	}
 
-	lex->debug << "param_list function returning " << errors << " errors\n";
+	//lex->debug << "param_list function returning " << errors << " errors\n";
 	return errors;
 }
 
 int SyntacticalAnalyzer::else_part(){
-	lex->debug << "else_part function called\n";
+	//lex->debug << "else_part function called\n";
 	p2file << "else_part\n";
 	int errors = 0;
 	
@@ -379,7 +378,7 @@ int SyntacticalAnalyzer::else_part(){
 
 	}
 
-	lex->debug << "else_part function returning " << errors << " errors\n";
+	//lex->debug << "else_part function returning " << errors << " errors\n";
 	return errors;
 
 
@@ -387,7 +386,7 @@ int SyntacticalAnalyzer::else_part(){
 
 
 int SyntacticalAnalyzer::action(){
-	lex->debug << "action function called\n";
+	//lex->debug << "action function called\n";
 	p2file << "action\n";
 	int errors = 0;
 	
@@ -482,12 +481,12 @@ int SyntacticalAnalyzer::action(){
 
 	rule = GetRule(10, token);
 	ending("action", token, errors);
-	lex->debug << "action function returning " << errors << " errors\n";
+	//lex->debug << "action function returning " << errors << " errors\n";
 	return errors;
 }
 
 int SyntacticalAnalyzer::any_other_token(){
-	lex->debug << "any_other_token function called\n";
+	//lex->debug << "any_other_token function called\n";
 	p2file << "any_other_token\n";
 	int errors = 0;
 	
@@ -511,7 +510,7 @@ int SyntacticalAnalyzer::any_other_token(){
 	}
 	rule = GetRule(11, token);
 	ending("any_other_token", token, errors);
-	lex->debug << "any_other_token function returning " << errors << " errors\n";
+	//lex->debug << "any_other_token function returning " << errors << " errors\n";
 	return errors;
 
 
@@ -525,12 +524,13 @@ void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
 
   p2file << "Starting <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << endl;
   p2file << "Using rule " << rule << endl;
+  lex->debug << "\t<" << nonTerm << "> started, using rule " << rule << "\n";
   
 }
 
 void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
   p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
-  
+  lex->debug << "\t<" << nonTerm << "> ending\n";
 }
 
 
