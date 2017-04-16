@@ -69,11 +69,11 @@ int SyntacticalAnalyzer::program (){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-	  // throw an error
-	  // Write to error message file???
-	  errors += 1;
+	  vector<int>expected_vector;
+	  expected_vector.push_back(LPAREN_T);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(0,token);
 	  
-	  cout << "There was an Error" << endl;
 	}
 	rules.startNonterminal(rule);
 	if (rule == 1){
@@ -97,7 +97,6 @@ int SyntacticalAnalyzer::program (){
  * called when non-terminating define() is reached
  **/
 int SyntacticalAnalyzer::define(){
-	p2file << "define\n";
 	int errors = 0;
 	
 	int rule = GetRule(1,token);
@@ -105,42 +104,51 @@ int SyntacticalAnalyzer::define(){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-	  // throw an error
-	  // Write to error message file???
-	  errors += 1;
-	  
-	  cout << "There was an Error" << endl;
+	  vector<int>expected_vector;
+	  expected_vector.push_back(LPAREN_T);
+	  errors += enforce(token,expected_vector);
+	  expected_vector.clear();
+	  rule = GetRule(1,token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 2){
-      rules.addToken(token);
+     token = NextToken();
+	  vector<int>expected_vector;
+	  expected_vector.push_back(DEFINE_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
+	  
 	  token = NextToken();
-	  errors += enforce(token, DEFINE_T);
+	  expected_vector.push_back(LPAREN_T);	 
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
 
 	  token = NextToken();
-	  errors += enforce(token, LPAREN_T);
-
-	  token = NextToken();
-	  errors += enforce(token, IDENT_T);
+	  expected_vector.push_back(IDENT_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
 
 	  token = NextToken();
 	  errors += runNonterminal("param_list");
 
-	  errors += enforce(token, RPAREN_T);
+	  expected_vector.push_back(RPAREN_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
+	  
 	  token = NextToken();
-
 	  errors += runNonterminal("stmt");
 
 	  errors += runNonterminal("stmt_list");
 
-	  errors += enforce(token, RPAREN_T);
+	  expected_vector.push_back(RPAREN_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
 
 	  token = NextToken();	//Get one additional token
 	  rule = GetRule(1, token);
 	  ending("define", token, errors);
     }
 	
-	cout << "Errors in define: " << errors << endl;
 	return errors;
 }
 
@@ -153,10 +161,10 @@ int SyntacticalAnalyzer::more_defines(){
 	string nonTerminal = "more_defines";
 	print(nonTerminal, token, rule);
 	if(rule == -1){
-		//Throw an error
-		//Write an error message file?
-		errors += 1;
-		cout << "There was an error from more_defines()" << endl;
+		int array[1] = {LPAREN_T};
+	  vector<int>expected_vector(array, array+2);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(2,token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 3){
@@ -181,9 +189,10 @@ int SyntacticalAnalyzer::stmt_list(){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-		//throw an error
-		//Write to error message file???
-		errors++;
+		int array[5] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+6);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(3,token);
 	}
 	rules.startNonterminal(rule);
 	if(rule == 5){
@@ -208,9 +217,10 @@ int SyntacticalAnalyzer::stmt(){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-	  //throw an error
-	  //Write to error message file???
-	  errors++;
+	  int array[4] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+5);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(4,token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 7){
@@ -226,7 +236,12 @@ int SyntacticalAnalyzer::stmt(){
     	  	rules.addToken(token);
 		token = NextToken();
 		errors += runNonterminal("action");
-		errors += enforce(token, RPAREN_T);
+		
+		vector<int>expected_vector;
+		expected_vector.push_back(RPAREN_T);
+		errors += enforce(token, expected_vector);
+		expected_vector.clear();
+		
 		token = NextToken();	//Get one additional token
 	  	rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
@@ -243,16 +258,12 @@ int SyntacticalAnalyzer::literal(){
     int rule = GetRule(5,token);
     string nonTerminal = "literal";
     print(nonTerminal, token, rule);
-    cout << "Token_name: " << lex->GetTokenName(token) << endl;
-    cout << "Rule: " << rule << endl;
-    cout << "Token: " << token << endl;
 
     if(rule == -1){
-	//throw an error
-	//Write to error message file???
-	errors += 1;
-	  
-		cout << "There was an Error" << endl;
+	int array[2] = {NUMLIT_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+3);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(5,token);
     	}
 	rules.startNonterminal(rule);
 	if (rule == 10) { // NUMLIT_T
@@ -284,9 +295,11 @@ int SyntacticalAnalyzer::quoted_lit() {
 	print(nonTerminal, token, rule);
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+		int array[30] = {IDENT_T, NUMLIT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T, DEFINE_T, NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T,
+		     STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
+      vector<int>expected_vector(array, array+30);
+      errors += enforce(token,expected_vector);
+      rule = GetRule(6, token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 12) {
@@ -311,9 +324,11 @@ int SyntacticalAnalyzer::more_tokens(){
 	print(nonTerminal, token, rule);
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+		int array[30] = {IDENT_T, NUMLIT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T, DEFINE_T, NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T,
+			   STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+30);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(7,token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 13) {
@@ -333,24 +348,20 @@ int SyntacticalAnalyzer::more_tokens(){
  * called when non-terminating param_list() is reached
  **/
 int SyntacticalAnalyzer::param_list(){
-	p2file << "param_list\n";
 	int errors = 0;
 	
 	int rule = GetRule(8,token);
 	string nonTerminal = "param_list";
 	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+		int array[2] = {IDENT_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+2);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(8, token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 15) {
-		cout << "Token: " << token << endl;
 		token = NextToken();
 		errors += runNonterminal("param_list");
 		rule = GetRule(8, token);
@@ -374,9 +385,10 @@ int SyntacticalAnalyzer::else_part(){
 	print(nonTerminal, token, rule);
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+		int array[5] = {NUMLIT_T, IDENT_T, QUOTE_T, LPAREN_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+6);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(9,token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 17) {
@@ -403,9 +415,12 @@ int SyntacticalAnalyzer::action(){
 	print(nonTerminal, token, rule);
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+		int array[26] = {IDENT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T,
+			   NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T, STRINGP_T, PLUS_T, MINUS_T,
+			   DIV_T, MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+27);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(10,token);
 	}
 	rules.startNonterminal(rule);
 	switch (rule) {
@@ -462,7 +477,6 @@ int SyntacticalAnalyzer::action(){
 
 	rule = GetRule(10, token);
 	ending("action", token, errors);
-	//lex->debug << "action function returning " << errors << " errors\n";
 	return errors;
 }
 
@@ -475,14 +489,13 @@ int SyntacticalAnalyzer::any_other_token(){
 	int rule = GetRule(11, token);
 	string nonTerminal = "any_other_token";
 	print(nonTerminal, token, rule);
-	cout << "Token_name: " << lex->GetTokenName(token) << endl;
-	cout << "Rule: " << rule << endl;
-	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-	    //throw an error
-	    //Write to error message file???
-	    errors += 1;
+	    int array[30] = {IDENT_T, NUMLIT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T, DEFINE_T, NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T,
+			   STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+30);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(11, token);
 	}
 	rules.startNonterminal(rule);
 	if (rule == 44) {
@@ -497,7 +510,6 @@ int SyntacticalAnalyzer::any_other_token(){
 	}
 	rule = GetRule(11, token);
 	ending("any_other_token", token, errors);
-	//lex->debug << "any_other_token function returning " << errors << " errors\n";
 	return errors;
 
 }
@@ -531,21 +543,23 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
 /** 
  * helper, removes and counts incorrect tokens until expected type is found
  **/
-int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
-    int errors = 0;
-  
-  if(token == expected){
-    	rules.addToken(token);
-    return errors;
+int SyntacticalAnalyzer::enforce(token_type token, vector<int>expected_vector) {
+  int errors = 0;
+  bool flag = true;
+  for(int i=0; i<expected_vector.size(); i++){
+    if(expected_vector[i] == token)
+      return errors;
   }
-  else{
-    while(token != expected){
-      rules.addToken(token);
+  while(flag){
       token = NextToken();
-      errors += 1;
-    }
-
+      for(int i=0; i<expected_vector.size(); i++){
+	if(expected_vector[i] == token || token == EOF_T)
+	  flag = false;
+      }
+      errors ++;
   }
+
+  return errors;
 }
 
 

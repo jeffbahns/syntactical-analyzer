@@ -39,7 +39,7 @@ class SyntacticalAnalyzer
 	int GetRule(int, token_type);
 	void print(string, token_type, int);
 	void ending(string, token_type, int);
-	int enforce(token_type, token_type);
+        int enforce(token_type token, vector<int>expected_vector);
 	int runNonterminal(string n);
 	token_type NextToken();
 	RuleMonitor rules;
