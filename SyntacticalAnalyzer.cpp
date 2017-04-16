@@ -416,38 +416,46 @@ int SyntacticalAnalyzer::action(){
 	errors += 1;
 	break;
     case 19:
+	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt");
 	errors += else_part();
 	break;
     case 20:
+	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	break;
     case 21:
+	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt");
 	break;
     case 22 ... 32:
+	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	break;
     case 33 ... 34:
+	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt_list");
 	break;
     case 35 ... 41:
+	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt_list");
 	break;
     case 42:
+	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	break;
     case 43:
+	rules.addToken(token);
 	token = lex ->GetToken();
 	break;
     }

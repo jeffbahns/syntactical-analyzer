@@ -161,6 +161,10 @@ void RuleMonitor::addToken(token_type newPiece){
 
 
 void RuleMonitor::printToFile(){
+	lex->debug << "\nThe structure of the source file is listed below. Lines beginning\n"
+		   << "with 'Exp' are the expected structure of the file, and lines\n"
+		   << "beginning with 'Rec' are the lines that were parsed.\n\n";
+	
 	int numLines = sequences.size();
 	for(int i = numLines - 1; i >= 0; i--){
 		lex->debug << sequences[i];
