@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "LexicalAnalyzer.h"
 
 using namespace std;
@@ -38,7 +39,7 @@ class SyntacticalAnalyzer
 	int GetRule(int, token_type);
 	void print(string, token_type, int);
 	void ending(string, token_type, int);
-	int enforce(token_type, token_type);
+	int enforce(token_type, std::vector<int>);
 	token_type NextToken();
 };
 	

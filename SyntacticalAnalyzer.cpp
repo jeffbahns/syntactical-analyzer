@@ -69,11 +69,11 @@ int SyntacticalAnalyzer::program (){
 	cout << "Token: " << token << endl;
 
 	if(rule == -1){
-	  // throw an error
-	  // Write to error message file???
-	  errors += 1;
+	  vector<int>expected_vector;
+	  expected_vector.push_back(LPAREN_T);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(0,token);
 	  
-	  cout << "There was an Error" << endl;
 	}else if (rule == 1){
 	  errors += define();
 	  errors += more_defines();
@@ -102,26 +102,36 @@ int SyntacticalAnalyzer::define(){
 	cout << "Token: " << token << endl;
 
 	if(rule == -1){
-	  // throw an error
-	  // Write to error message file???
-	  errors += 1;
+	  vector<int>expected_vector;
+	  expected_vector.push_back(LPAREN_T);
+	  errors += enforce(token,expected_vector);
+	  expected_vector.clear();
+	  rule = GetRule(1,token);
 	  
-	  cout << "There was an Error" << endl;
 	}else if (rule == 2){
 	  token = NextToken();
-	  errors += enforce(token, DEFINE_T);
+	  vector<int>expected_vector;
+	  expected_vector.push_back(DEFINE_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
+	  
+	  token = NextToken();
+	  expected_vector.push_back(LPAREN_T);	 
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
 
 	  token = NextToken();
-	  errors += enforce(token, LPAREN_T);
-
-	  token = NextToken();
-	  errors += enforce(token, IDENT_T);
+	  expected_vector.push_back(IDENT_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
 
 	  token = NextToken();
 	  errors += param_list();
 
 	  //token = NextToken(); Unneeded since param_list() should get one extra token
-	  errors += enforce(token, RPAREN_T);
+	  expected_vector.push_back(RPAREN_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
 	  token = NextToken();
 
 	  errors += stmt();
@@ -129,10 +139,12 @@ int SyntacticalAnalyzer::define(){
 	  errors += stmt_list();
 
 	  //token = NextToken(); Unneeded since stmt_list() should get one extra token
-	  errors += enforce(token, RPAREN_T);
+	  expected_vector.push_back(RPAREN_T);
+	  errors += enforce(token, expected_vector);
+	  expected_vector.clear();
 
 	  token = NextToken();	//Get one additional token
-	  rule = GetRule(1, token);
+	  // rule = GetRule(1, token); I don't think we need to set the next rule?
 	  ending("define", token, errors);
 	}
 	
@@ -150,19 +162,20 @@ int SyntacticalAnalyzer::more_defines(){
 	string nonTerminal = "more_defines";
 	print(nonTerminal, token, rule);
 	if(rule == -1){
-		//Throw an error
-		//Write an error message file?
-		errors += 1;
-		cout << "There was an error from more_defines()" << endl;
-	} else if (rule == 3){
-		define();
-		more_defines();
-	  	rule = GetRule(1, token);
-	  	ending("more_define", token, errors);
-	} else if (rule == 4){
-	  	rule = GetRule(2, token);
-	  	ending("more_define", token, errors);
+	  int array[2] = {LAMBDA, LPAREN_T};
+	  vector<int>expected_vector(array, array+2);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(2,token);
 
+	} else if (rule == 3){
+	  errors += define();
+	  errors += more_defines();
+	  //rule = GetRule(1, token);
+	  ending("more_define", token, errors);
+	} else if (rule == 4){
+	  // rule = GetRule(2, token);
+	  ending("more_define", token, errors);
+	  
 	}
 	return errors;
 }
@@ -175,17 +188,19 @@ int SyntacticalAnalyzer::stmt_list(){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-		//throw an error
-		//Write to error message file???
-		errors++;
+	  int array[6] = {LAMBDA, IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+6);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(3,token);
+	  
 	} else if(rule == 5){
-		errors += stmt();
-		errors += stmt_list();
-	  	rule = GetRule(3, token);
-	  	ending("stmt_list", token, errors);
+	  errors += stmt();
+	  errors += stmt_list();
+	  //rule = GetRule(3, token);
+	  ending("stmt_list", token, errors);
 	} else if (rule == 6){
-	  	rule = GetRule(3, token);
-	  	ending("stmt_list", token, errors);
+	  //rule = GetRule(3, token);
+	  ending("stmt_list", token, errors);
 
 	}
 	return errors;
@@ -199,23 +214,28 @@ int SyntacticalAnalyzer::stmt(){
 	print(nonTerminal, token, rule);
 
 	if(rule == -1){
-	  //throw an error
-	  //Write to error message file???
-	  errors++;
+	  int array[5] = {LAMBDA, IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+5);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(4,token);
+	  
 	} else if (rule == 7){
-		literal();	
-	  	rule = GetRule(4, token);
+		errors += literal();	
+	  	//rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	} else if (rule == 8){
 		token = NextToken();	//Get one additional token
-	  	rule = GetRule(4, token);
+	  	//rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	} else if (rule == 9){
 		token = NextToken();
-		action();
-		errors += enforce(token, RPAREN_T);
+		errors += action();
+		vector<int>expected_vector;
+		expected_vector.push_back(RPAREN_T);
+		errors += enforce(token, expected_vector);
+		expected_vector.clear();
 		token = NextToken();	//Get one additional token
-	  	rule = GetRule(4, token);
+	  	//rule = GetRule(4, token);
 	  	ending("stmt", token, errors);
 	}
 	return errors;
@@ -234,19 +254,19 @@ int SyntacticalAnalyzer::literal(){
 	cout << "Token: " << token << endl;
 
     	if(rule == -1){
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+	  int array[3] = {LAMBDA, NUMLIT_T, QUOTE_T};
+	  vector<int>expected_vector(array, array+3);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(5,token);
 	  
-		cout << "There was an Error" << endl;
     	} else if (rule == 10) { // NUMLIT_T
 		token = NextToken();	//Get one additional token
-	  	rule = GetRule(5, token);
+	  	//rule = GetRule(5, token);
 	  	ending("literal", token, errors);
     	} else if (rule == 11) { // QUOTE_T <quoted_lit>
 		token = NextToken();
 		errors += quoted_lit();
-		rule = GetRule(5, token);
+		//rule = GetRule(5, token);
 	  	ending("literal", token, errors);
 
     	}
@@ -257,7 +277,7 @@ int SyntacticalAnalyzer::literal(){
 
 
 int SyntacticalAnalyzer::quoted_lit() {
-
+  /*This function is -2 on RPARENT_T, we need to be able to handle that*/
     lex->debug << "quoted_lit function called\n";
     p2file << "quoted_lit\n";
     int errors = 0;
@@ -270,12 +290,20 @@ int SyntacticalAnalyzer::quoted_lit() {
     cout << "Token: " << token << endl;
 
     if (rule == -1) {
-	//throw an error
-	//Write to error message file???
-	errors += 1;
+      bool flag=true;
+      while(flag){
+	token = NextToken();
+	if(token==ERROR_T)
+	  errors++;
+	else{
+	  flag=false;
+	  rule = GetRule(6,token);
+	}
+      }
+      
     } else if (rule == 12) {
 	errors += any_other_token();
-	rule = GetRule(6, token);
+	//rule = GetRule(6, token);
 	ending("quoted_lit", token, errors);
 
     }
@@ -299,16 +327,24 @@ int SyntacticalAnalyzer::more_tokens(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+	  bool flag=true;
+	  while(flag){
+	    token = NextToken();
+	    if(token==ERROR_T)
+	      errors++;
+	    else{
+	      flag=false;
+	      rule = GetRule(7,token);
+	    }
+	  }
+	  
 	} else if (rule == 13) {
 		errors += any_other_token();
 		errors += more_tokens();
-		rule = GetRule(7, token);
+		//rule = GetRule(7, token);
 		ending("more_tokens", token, errors);
 	} else if (rule == 14) {
-		rule = GetRule(7, token);
+	  //rule = GetRule(7, token);
 		ending("more_tokens", token, errors);
 	}
 
@@ -331,18 +367,27 @@ int SyntacticalAnalyzer::param_list(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+	  bool flag=true;
+	  while(flag){
+	    token = NextToken();
+	    if(token==RPAREN_T || token==IDENT_T || EOF_T){
+	      flag=false;
+	      rule = GetRule(8,token);
+	    }	     
+	    else{
+	       errors++;
+	    }
+	  }
+	  
 	} else if (rule == 15) {
 		token = NextToken();
 		errors += param_list();
-		rule = GetRule(8, token);
+		//rule = GetRule(8, token);
 		ending("param_list", token, errors);
 
 	} else if (rule == 16) {
 		//token = NextToken(); //Didn't think this was necessary for lambas but maybe it is?
-		rule = GetRule(8, token);
+		//rule = GetRule(8, token);
 		ending("param_list", token, errors);
 
 	}
@@ -364,17 +409,19 @@ int SyntacticalAnalyzer::else_part(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+	  int array[6] = {LAMBDA, NUMLIT_T, IDENT_T, QUOTE_T, LPAREN_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+6);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(9,token);
+	  
 	} else if (rule == 17) {
 		errors += stmt();
-		rule = GetRule(9, token);
+		//rule = GetRule(9, token);
 		ending("else_part", token, errors);
 
 	} else if (rule == 18) {
-		rule = GetRule(9, token);
-		ending("else_part", token, errors);
+	  //rule = GetRule(9, token);
+	  ending("else_part", token, errors);
 
 	}
 
@@ -398,9 +445,13 @@ int SyntacticalAnalyzer::action(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-		//throw an error
-		//Write to error message file???
-		errors += 1;
+	  int array[27] = {LAMBDA, IDENT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T,
+			   NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T, STRINGP_T, PLUS_T, MINUS_T,
+			   DIV_T, MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, RPAREN_T};
+	  vector<int>expected_vector(array, array+27);
+	  errors += enforce(token,expected_vector);
+	  rule = GetRule(10,token);
+	  
 	} else if (rule == 19) {
 		token = NextToken();
 		errors += stmt();
@@ -479,7 +530,7 @@ int SyntacticalAnalyzer::action(){
 		token = lex ->GetToken();
 	}
 
-	rule = GetRule(10, token);
+	//rule = GetRule(10, token);
 	ending("action", token, errors);
 	lex->debug << "action function returning " << errors << " errors\n";
 	return errors;
@@ -498,9 +549,17 @@ int SyntacticalAnalyzer::any_other_token(){
 	cout << "Token: " << token << endl;
 
 	if (rule == -1) {
-	    //throw an error
-	    //Write to error message file???
-	    errors += 1;
+	  bool flag=true;
+	  while(flag){
+	    token = NextToken();
+	    if(token==ERROR_T)
+	      errors++;
+	    else{
+	      flag=false;
+	      rule = GetRule(11,token);
+	    }
+	  }
+	  
 	} else if (rule == 44) {
 	    token = NextToken();
 	    more_tokens();
@@ -516,6 +575,7 @@ int SyntacticalAnalyzer::any_other_token(){
 
 
 }
+
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
   return firstsTable[row][col];
 }
@@ -533,22 +593,26 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
 }
 
 
-int SyntacticalAnalyzer::enforce(token_type token, token_type expected) {
+int SyntacticalAnalyzer::enforce(token_type token, vector<int>expected_vector) {
   int errors = 0;
-  
-  if(token == expected){
-    return errors;
+  bool flag = true;
+  for(int i=0; i<expected_vector.size(); i++){
+    if(expected_vector[i] == token)
+      return errors;
   }
-  else{
-    while(token != expected){
-     //cout << "WE'RE ENFORCING A " << lex->GetTokenName(expected) << "!" << endl;
+  while(flag){
+    //cout << "WE'RE ENFORCING A " << lex->GetTokenName(expected) << "!" << endl;
       token = NextToken();
-      errors += 1;
-    }
-    return errors;
+      for(int i=0; i<expected_vector.size(); i++){
+	if(expected_vector[i] == token || token == EOF_T)
+	  flag = false;
+      }
+      errors ++;
   }
 
+  return errors;
 }
+
 
 
 /**
