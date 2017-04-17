@@ -426,12 +426,6 @@ int SyntacticalAnalyzer::action(){
 	}
 	rules.startNonterminal(rule);
 	switch (rule) {
-    case -1:
-	//throw an error
-	//Write to error message file???
-	// CALL ENFORCE UNTIL TOKEN FOUND(?)
-	errors += 1;
-	break;
     case 19:
 	rules.addToken(token);
 	token = NextToken();
@@ -450,7 +444,11 @@ int SyntacticalAnalyzer::action(){
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt");
 	break;
-    case 22 ... 31:
+    case 22 ... 23:
+        rules.addToken(token);
+        token = NextToken();
+        errors += runNonterminal("stmt_list");
+    case 24 ... 31:
 	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
