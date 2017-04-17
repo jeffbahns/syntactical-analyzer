@@ -163,7 +163,7 @@ int SyntacticalAnalyzer::more_defines(){
 	print(nonTerminal, token, rule);
 	if(rule == -1){
 		int array[1] = {LPAREN_T};
-	  vector<int>expected_vector(array, array+2);
+	  vector<int>expected_vector(array, array+1);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(2,token);
 	}
@@ -191,7 +191,7 @@ int SyntacticalAnalyzer::stmt_list(){
 
 	if(rule == -1){
 		int array[5] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T, RPAREN_T};
-	  vector<int>expected_vector(array, array+6);
+	  vector<int>expected_vector(array, array+5);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(3,token);
 	}
@@ -219,7 +219,7 @@ int SyntacticalAnalyzer::stmt(){
 
 	if(rule == -1){
 	  int array[4] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T};
-	  vector<int>expected_vector(array, array+5);
+	  vector<int>expected_vector(array, array+4);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(4,token);
 	}
@@ -262,7 +262,7 @@ int SyntacticalAnalyzer::literal(){
 
     if(rule == -1){
 	int array[2] = {NUMLIT_T, QUOTE_T};
-	  vector<int>expected_vector(array, array+3);
+	  vector<int>expected_vector(array, array+2);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(5,token);
     	}
@@ -388,7 +388,7 @@ int SyntacticalAnalyzer::else_part(){
 
 	if (rule == -1) {
 		int array[5] = {NUMLIT_T, IDENT_T, QUOTE_T, LPAREN_T, RPAREN_T};
-	  vector<int>expected_vector(array, array+6);
+	  vector<int>expected_vector(array, array+5);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(9,token);
 	}
@@ -420,7 +420,7 @@ int SyntacticalAnalyzer::action(){
 		int array[26] = {IDENT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T,
 			   NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T, STRINGP_T, PLUS_T, MINUS_T,
 			   DIV_T, MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, RPAREN_T};
-	  vector<int>expected_vector(array, array+27);
+	  vector<int>expected_vector(array, array+26);
 	  errors += enforce(token,expected_vector);
 	  rule = GetRule(10,token);
 	}
