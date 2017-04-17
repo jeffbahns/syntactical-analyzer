@@ -16,17 +16,17 @@ using namespace std;
 
 int firstsTable[][33] =
     {{0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1},
-     {0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -2},
+     {0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1/*-2*/},
      {0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, 4},
      {0, 5, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, 6, 5, -1, -1},
-     {0, 8, 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 9, -2, 7, -1, -1},
-     {0, -2, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -2, 11, -1, -1},
-     {0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, -2, 12, -1, -1},
+     {0, 8, 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 9, -1/*-2*/, 7, -1, -1},
+     {0, -1/*-2*/, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1/*-2*/, -1/*-2*/, 11, -1, -1},
+     {0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, -1/*-2*/, 12, -1, -1},
      {0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 13, -1, -1},
      {0, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16, -1, -1, -1},
      {0, 17, 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 17, 18, 17, -1, -1},
-     {0, 41, -1, 21, 19, 42, 43, 20, 22, 23, 24, -1, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, -1, -2, -1, -1, -1},
-     {0, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 44, -2, 72, -1, -1}};
+     {0, 41, -1, 21, 19, 42, 43, 20, 22, 23, 24, -1, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, -1, -1/*-2*/, -1, -1, -1},
+     {0, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 44, -1/*-2*/, 72, -1, -1}};
 
 /**
  * constructor, takes filename as arg
@@ -172,7 +172,7 @@ int SyntacticalAnalyzer::more_defines(){
     print(nonTerminal, token, rule);
     if(rule == -1){
 	int array[1] = {LPAREN_T};
-	vector<int>expected_vector(array, array+2);
+	vector<int>expected_vector(array, array+1);
 	errors += enforce(token,expected_vector);
 	rule = GetRule(2,token);
     }
@@ -200,7 +200,7 @@ int SyntacticalAnalyzer::stmt_list(){
 
     if(rule == -1){
 	int array[5] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T, RPAREN_T};
-	vector<int>expected_vector(array, array+6);
+	vector<int>expected_vector(array, array+5);
 	errors += enforce(token,expected_vector);
 	rule = GetRule(3,token);
     }
@@ -228,7 +228,7 @@ int SyntacticalAnalyzer::stmt(){
 
     if(rule == -1){
 	int array[4] = {IDENT_T, NUMLIT_T, LPAREN_T, QUOTE_T};
-	vector<int>expected_vector(array, array+5);
+	vector<int>expected_vector(array, array+4);
 	errors += enforce(token,expected_vector);
 	rule = GetRule(4,token);
     }
@@ -271,7 +271,7 @@ int SyntacticalAnalyzer::literal(){
 
     if(rule == -1){
 	int array[2] = {NUMLIT_T, QUOTE_T};
-	vector<int>expected_vector(array, array+3);
+	vector<int>expected_vector(array, array+2);
 	errors += enforce(token,expected_vector);
 	rule = GetRule(5,token);
     }
@@ -390,14 +390,13 @@ int SyntacticalAnalyzer::param_list(){
  **/
 int SyntacticalAnalyzer::else_part(){
     int errors = 0;
-	
     int rule = GetRule(9, token);
     string nonTerminal = "else_part";
     print(nonTerminal, token, rule);
 
     if (rule == -1) {
 	int array[5] = {NUMLIT_T, IDENT_T, QUOTE_T, LPAREN_T, RPAREN_T};
-	vector<int>expected_vector(array, array+6);
+	vector<int>expected_vector(array, array+5);
 	errors += enforce(token,expected_vector);
 	rule = GetRule(9,token);
     }
@@ -411,7 +410,6 @@ int SyntacticalAnalyzer::else_part(){
 	rule = GetRule(9, token);
 	ending("else_part", token, errors);
     }
-
     return errors;
 }
 
@@ -420,7 +418,6 @@ int SyntacticalAnalyzer::else_part(){
  **/
 int SyntacticalAnalyzer::action(){
     int errors = 0;
-	
     int rule = GetRule(10, token);
     string nonTerminal = "action";
     print(nonTerminal, token, rule);
@@ -429,18 +426,12 @@ int SyntacticalAnalyzer::action(){
 	int array[26] = {IDENT_T, CONS_T, IF_T, DISPLAY_T, NEWLINE_T, LISTOP_T, AND_T, OR_T, NOT_T,
 			 NUMBERP_T, SYMBOLP_T, LISTP_T, ZEROP_T, NULLP_T, CHARP_T, STRINGP_T, PLUS_T, MINUS_T,
 			 DIV_T, MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, RPAREN_T};
-	vector<int>expected_vector(array, array+27);
+	vector<int>expected_vector(array, array+26);
 	errors += enforce(token,expected_vector);
 	rule = GetRule(10,token);
     }
     rules.startNonterminal(rule);
     switch (rule) {
-    case -1:
-	//throw an error
-	//Write to error message file???
-	// CALL ENFORCE UNTIL TOKEN FOUND(?)
-	errors += 1;
-	break;
     case 19:
 	rules.addToken(token);
 	token = NextToken();
@@ -459,7 +450,11 @@ int SyntacticalAnalyzer::action(){
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt");
 	break;
-    case 22 ... 31:
+    case 22 ... 23:
+        rules.addToken(token);
+        token = NextToken();
+        errors += runNonterminal("stmt_list");
+    case 24 ... 31:
 	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
@@ -578,7 +573,7 @@ int SyntacticalAnalyzer::enforce(token_type token, vector<int>expected_vector) {
 		flag = false;
 	    }
 	}
-	lstFile << "Error, this token was not expected: " << token << endl;
+	lstfile << "Error, this token was not expected: " << token << endl;
 	rules.addToken(token);
 	errors ++;
     }
