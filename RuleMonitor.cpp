@@ -1,3 +1,18 @@
+/******************************************************************************
+ * File: 	RuleMonitor.cpp
+ * Authors: 	Jordan Bergero, Jeff Bahns, Erich Bucher
+ * Description:	This file implements the RuleMonitor class. A RuleMonitor
+ * 		object is used to keep track of the hierarchy of nonterminals
+ * 		being used in rules for other nonterminals.
+ * 		RuleMonitors work on a stack system, where the bottom of the stack
+ * 		is a rule, the item above it is a rule to make a nonterminal in
+ * 		the bottom's rule, the next item is a rule to make a nonterminal
+ * 		for the rule below it, etc. When a rule is completed, it is popped
+ * 		off the stack and stored at the end of a vector, so that once all
+ * 		of the rules are completed, they can all be printed in the order
+ * 		that they were created.
+ *****************************************************************************/
+
 #include "RuleMonitor.h"
 #include "LexicalAnalyzer.h"
 #include <iostream>
@@ -88,12 +103,29 @@ void RuleMonitor::setLex(LexicalAnalyzer * _lex){
 	lexSet = true;
 }
 
+
+/**
+ * Description:	Starts a new nonterminal to track for the given rule number.
+ * 		This should be called at the beginning of a new nonterminal that
+ * 		is being read in.
+ *
+ * Pre:		1 <= ruleNum <= 72
+ */
 void RuleMonitor::startNonterminal(int ruleNum){
     activeRules.push(ruleNum+1);
     activeNonterminals.push("    <" + nonTerminalFromRule(ruleNum) + "> ->");
 }
 
 
+/**
+ * Description: Ends the most recently pushed nonterminal and pops it off of the stacks.
+ * 		This function should be called once a nonterminal has finished being
+ * 		read. The rule and what was seen will be merged into a single line and
+ * 		then be stored in the sequences vector to be later printed out in order.
+ * 
+ * Pre:		startNonterminal() has been called once more than the number of times
+ * 		that endNonterminal() has been called.
+ **/
 void RuleMonitor::endNonterminal(){
 	string outputString = "";
 	string spacing = "";
@@ -117,6 +149,10 @@ void RuleMonitor::endNonterminal(){
 }
 
 
+/**
+ * Description:	Returns the name of the nonterminal that is on the left side of the
+ * 		given rule number.
+ **/
 string RuleMonitor::nonTerminalFromRule(int ruleNum){
 	if(ruleNum == 1)
 		return "program";
@@ -142,9 +178,16 @@ string RuleMonitor::nonTerminalFromRule(int ruleNum){
 		return "action";
 	if(ruleNum >= 44 && ruleNum <= 72)
 		return "any_other_token";
+	return "INVALID RULE";
 }
 
 
+/**
+ * Description:	Adds the name of a nonterminal to the end of what has been seen in the
+ * 		current rule that is being worked on.
+ *
+ * Pre:		newPiece does not have the < and > around it.
+ **/
 void RuleMonitor::addNonterminal(string newPiece){
 	if(activeNonterminals.top() != ""){
 		activeNonterminals.top() += " ";
@@ -152,6 +195,10 @@ void RuleMonitor::addNonterminal(string newPiece){
 	activeNonterminals.top() += "<" + newPiece + ">";
 }
 
+/**
+ * Description:	Adds the name of a token to the end of what has been seen in the
+ * 		current rule that is being worked on.
+ **/
 void RuleMonitor::addToken(token_type newPiece){
 	if(activeNonterminals.top() != ""){
 		activeNonterminals.top() += " ";
@@ -160,6 +207,14 @@ void RuleMonitor::addToken(token_type newPiece){
 }
 
 
+/**
+ * Description: Prints out to the debug file in lex all of the rules that were expected
+ * 		to be followed and the tokens that were parsed to try to satisfy those rules.
+ * 		The rule is always printed above the received input, and the rule number is
+ * 		printed on the same line as the rule. If a line is indented further than
+ * 		another, then it means that it is being used to make part of a nonterminal
+ * 		in the lesser indented line above it.
+ **/
 void RuleMonitor::printToFile(){
 	lex->debug << "\nThe structure of the source file is listed below. Lines beginning\n"
 		   << "with 'Exp' are the expected structure of the file, and lines\n"

@@ -536,7 +536,9 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
 }
 
 /** 
- * helper, removes and counts incorrect tokens until expected type is found
+ * Forces the code to continue to read in tokens until you find one that is valid, based on
+ * the current rule that is being worked on. If the end of the file is reached, the function
+ * will also end and token will be equal to EOF_T.
  **/
 int SyntacticalAnalyzer::enforce(token_type token, vector<int>expected_vector) {
     int errors = 0;
@@ -576,6 +578,11 @@ token_type SyntacticalAnalyzer::NextToken(){
 }
 
 
+/**
+ * This function will run the appropriate nonTerminal function, based on the given
+ * string. It will also add the nonterminal to the current rule in the RuleMonitor
+ * object.
+ */
 int SyntacticalAnalyzer::runNonterminal(string n){
     rules.addNonterminal(n);
     if(n == "program")
