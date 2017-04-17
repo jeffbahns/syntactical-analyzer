@@ -19,15 +19,17 @@ RuleMonitor.o: RuleMonitor.cpp RuleMonitor.h LexicalAnalyzer.h
 clean : 
 	rm *.o P2.out *.gch
 
-submit : Project2.cpp LexicalAnalyzer.h LexicalAnalyzer.save SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp makefile README.txt
-	rm -rf ylnP2
-	mkdir ylnP2
-	cp Project2.cpp ylnP2
-	cp LexicalAnalyzer.h ylnP2
-	cp LexicalAnalyzer.save ylnP2
-	cp SyntacticalAnalyzer.h ylnP2
-	cp SyntacticalAnalyzer.cpp ylnP2
-	cp makefile ylnP2
-	cp README.txt ylnP2
-	tar cfvz ylnP2.tgz ylnP2
-	cp ylnP2.tgz ~tiayln/cs460drop
+submit : Project2.cpp LexicalAnalyzer.h LexicalAnalyzer.save SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp RuleMonitor.cpp RuleMonitor.h makefile README.txt
+	rm -rf TeamNP2
+	mkdir TeamNP2
+	cp Project2.cpp TeamNP2
+	cp LexicalAnalyzer.h TeamNP2
+	cp LexicalAnalyzer.save TeamNP2
+	cp SyntacticalAnalyzer.h TeamNP2
+	cp SyntacticalAnalyzer.cpp TeamNP2
+	cp RuleMonitor.h TeamNP2 #our extra class
+	cp RuleMonitor.cpp TeamNP2 #our extra class
+	cp makefile TeamNP2
+	cp README.txt TeamNP2
+	tar cfvz TeamNP2.tgz TeamNP2
+	cp TeamNP2.tgz ~tiawatts/cs460drop

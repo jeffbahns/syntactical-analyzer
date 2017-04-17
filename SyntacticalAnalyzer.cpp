@@ -172,10 +172,10 @@ int SyntacticalAnalyzer::more_defines(){
 		errors += runNonterminal("define");
 		errors += runNonterminal("more_defines");
 	  	rule = GetRule(1, token);
-	  	ending("more_define", token, errors);
+	  	ending("more_defines", token, errors);
 	} else if (rule == 4){
 	  	rule = GetRule(2, token);
-	  	ending("more_define", token, errors);
+	  	ending("more_defines", token, errors);
     }
     return errors;
 }
@@ -450,10 +450,15 @@ int SyntacticalAnalyzer::action(){
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt");
 	break;
-    case 22 ... 32:
+    case 22 ... 31:
 	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
+	break;
+    case 32:
+	rules.addToken(token);
+	token = NextToken();
+	errors += runNonterminal("stmt_list");
 	break;
     case 33 ... 34:
 	rules.addToken(token);
@@ -537,8 +542,11 @@ void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
  * helper, prints ending statement
  **/
 void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
-  p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors << endl;
-  lex->debug << "\t<" << nonTerm << "> ending\n";
+    p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors;
+  lex->debug << "\t<" << nonTerm << "> ending";
+  if (nonTerm != "program") {
+      p2file << "\n";
+  }
   rules.endNonterminal();
 }
 
