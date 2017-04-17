@@ -155,7 +155,6 @@ int SyntacticalAnalyzer::define(){
 	expected_vector.clear();
 
 	token = NextToken();	//Get one additional token
-	rule = GetRule(1, token);
 	ending("define", token, errors);
     }
 	
@@ -180,10 +179,8 @@ int SyntacticalAnalyzer::more_defines(){
     if (rule == 3){
 	errors += runNonterminal("define");
 	errors += runNonterminal("more_defines");
-	rule = GetRule(1, token);
 	ending("more_defines", token, errors);
     } else if (rule == 4){
-	rule = GetRule(2, token);
 	ending("more_defines", token, errors);
     }
     return errors;
@@ -208,10 +205,8 @@ int SyntacticalAnalyzer::stmt_list(){
     if(rule == 5){
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt_list");
-	rule = GetRule(3, token);
 	ending("stmt_list", token, errors);
     } else if (rule == 6){
-	rule = GetRule(3, token);
 	ending("stmt_list", token, errors);
     }
     return errors;
@@ -235,12 +230,10 @@ int SyntacticalAnalyzer::stmt(){
     rules.startNonterminal(rule);
     if (rule == 7){
 	errors += runNonterminal("literal");	
-	rule = GetRule(4, token);
 	ending("stmt", token, errors);
     } else if (rule == 8){
 	rules.addToken(token);
 	token = NextToken();	//Get one additional token
-	rule = GetRule(4, token);
 	ending("stmt", token, errors);
     } else if (rule == 9){
 	rules.addToken(token);
@@ -253,7 +246,6 @@ int SyntacticalAnalyzer::stmt(){
 	expected_vector.clear();
 		
 	token = NextToken();	//Get one additional token
-	rule = GetRule(4, token);
 	ending("stmt", token, errors);
     }
     return errors;
@@ -279,13 +271,11 @@ int SyntacticalAnalyzer::literal(){
     if (rule == 10) { // NUMLIT_T
 	rules.addToken(token);
 	token = NextToken();	//Get one additional token
-	rule = GetRule(5, token);
 	ending("literal", token, errors);
     } else if (rule == 11) { // QUOTE_T <quoted_lit>
 	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("quoted_lit");
-	rule = GetRule(5, token);
 	ending("literal", token, errors);
 
     }
@@ -314,7 +304,6 @@ int SyntacticalAnalyzer::quoted_lit() {
     rules.startNonterminal(rule);
     if (rule == 12) {
 	errors += runNonterminal("any_other_token");
-	rule = GetRule(6, token);
 	ending("quoted_lit", token, errors);
 
     }
@@ -344,10 +333,8 @@ int SyntacticalAnalyzer::more_tokens(){
     if (rule == 13) {
 	errors += runNonterminal("any_other_token");
 	errors += runNonterminal("more_tokens");
-	rule = GetRule(7, token);
 	ending("more_tokens", token, errors);
     } else if (rule == 14) {
-	rule = GetRule(7, token);
 	ending("more_tokens", token, errors);
     }
 
@@ -375,11 +362,9 @@ int SyntacticalAnalyzer::param_list(){
 	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("param_list");
-	rule = GetRule(8, token);
 	ending("param_list", token, errors);
 
     } else if (rule == 16) {
-	rule = GetRule(8, token);
 	ending("param_list", token, errors);
     }
     return errors;
@@ -403,11 +388,9 @@ int SyntacticalAnalyzer::else_part(){
     rules.startNonterminal(rule);
     if (rule == 17) {
 	errors += runNonterminal("stmt");
-	rule = GetRule(9, token);
 	ending("else_part", token, errors);
 
     } else if (rule == 18) {
-	rule = GetRule(9, token);
 	ending("else_part", token, errors);
     }
     return errors;
@@ -486,7 +469,6 @@ int SyntacticalAnalyzer::action(){
 	break;
     }
 
-    rule = GetRule(10, token);
     ending("action", token, errors);
     return errors;
 }
@@ -519,7 +501,6 @@ int SyntacticalAnalyzer::any_other_token(){
 	rules.addToken(token);
 	token = NextToken();	//Get one additional lexeme
     }
-    rule = GetRule(11, token);
     ending("any_other_token", token, errors);
     return errors;
 
