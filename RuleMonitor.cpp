@@ -112,7 +112,7 @@ void RuleMonitor::setLex(LexicalAnalyzer * _lex){
  * Pre:		1 <= ruleNum <= 72
  */
 void RuleMonitor::startNonterminal(int ruleNum){
-    activeRules.push(ruleNum+1);
+    activeRules.push(ruleNum);
     activeNonterminals.push("    <" + nonTerminalFromRule(ruleNum) + "> ->");
 }
 
