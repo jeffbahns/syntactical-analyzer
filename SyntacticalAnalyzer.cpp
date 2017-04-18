@@ -540,7 +540,7 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
  * the current rule that is being worked on. If the end of the file is reached, the function
  * will also end and token will be equal to EOF_T.
  **/
-int SyntacticalAnalyzer::enforce(token_type token, vector<int>expected_vector) {
+int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) {
     int errors = 0;
     bool flag = true;
     for(int i=0; i<expected_vector.size(); i++){
