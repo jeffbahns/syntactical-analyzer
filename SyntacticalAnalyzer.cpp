@@ -528,7 +528,7 @@ void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
  **/
 void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
     p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors;
-    lex->debug << "\t<" << nonTerm << "> ending";
+    lex->debug << "\t<" << nonTerm << "> ending\n";
     if (nonTerm != "program") {
 	p2file << "\n";
     }
