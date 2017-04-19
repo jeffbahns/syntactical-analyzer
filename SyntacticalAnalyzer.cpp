@@ -81,16 +81,19 @@ int SyntacticalAnalyzer::program (){
 	vector<int>expected_vector;
 	expected_vector.push_back(LPAREN_T);
 	errors += enforce(token,expected_vector);
-	rule = GetRule(0,token);	  
+        if(token == EOF_T) {
+            ending(nonTerminal, token, errors);
+            return errors;
+        }
+        rule = GetRule(0,token);	  
     }
-    if(token == EOF_T) {return errors;}
+
     rules.startNonterminal(rule);
     if (rule == 1){
 	errors += runNonterminal("define");
 	errors += runNonterminal("more_defines");
     }
 
-	
     if (token != EOF_T){
 	lex->ReportError ("Expected end of file; " + lex->GetLexeme ());
 	errors++;
@@ -117,9 +120,15 @@ int SyntacticalAnalyzer::define(){
 	expected_vector.push_back(LPAREN_T);
 	errors += enforce(token,expected_vector);
 	expected_vector.clear();
+
+	if(token == EOF_T) {
+            ending(nonTerminal, token, errors);	
+            return errors;
+        }
+
 	rule = GetRule(1,token);
     }
-    if(token == EOF_T) {return errors;}
+
     rules.startNonterminal(rule);
     if (rule == 2){
 	rules.addToken(token);
@@ -128,6 +137,7 @@ int SyntacticalAnalyzer::define(){
 	expected_vector.push_back(DEFINE_T);
 	errors += enforce(token, expected_vector);
 	if(token == EOF_T) {
+            ending(nonTerminal, token, errors);	
 	    return errors;
 	}
 	expected_vector.clear();
@@ -136,6 +146,7 @@ int SyntacticalAnalyzer::define(){
 	expected_vector.push_back(LPAREN_T);	 
 	errors += enforce(token, expected_vector);
 	if(token == EOF_T) {
+            ending(nonTerminal, token, errors);	
 	    return errors;
 	}
 	expected_vector.clear();
@@ -144,6 +155,7 @@ int SyntacticalAnalyzer::define(){
 	expected_vector.push_back(IDENT_T);
 	errors += enforce(token, expected_vector);
 	if(token == EOF_T) {
+            ending(nonTerminal, token, errors);	
 	    return errors;
 	}
 	expected_vector.clear();
@@ -154,6 +166,7 @@ int SyntacticalAnalyzer::define(){
 	expected_vector.push_back(RPAREN_T);
 	errors += enforce(token, expected_vector);
 	if(token == EOF_T) {
+            ending(nonTerminal, token, errors);	
 	    return errors;
 	}
 	expected_vector.clear();
@@ -166,14 +179,14 @@ int SyntacticalAnalyzer::define(){
 	expected_vector.push_back(RPAREN_T);
 	errors += enforce(token, expected_vector);
 	if(token == EOF_T) {
+            ending(nonTerminal, token, errors);	
 	    return errors;
 	}
 	expected_vector.clear();
 
 	token = NextToken();	//Get one additional token
-	ending("define", token, errors);
     }
-	
+    ending(nonTerminal, token, errors);	
     return errors;
 }
 
@@ -190,6 +203,7 @@ int SyntacticalAnalyzer::more_defines(){
 	vector<int>expected_vector(array, array+1);
 	errors += enforce(token,expected_vector);
 	if(token == EOF_T) {
+            ending(nonTerminal, token, errors);	
 	    return errors;
 	}
 	rule = GetRule(2,token);
@@ -198,10 +212,10 @@ int SyntacticalAnalyzer::more_defines(){
     if (rule == 3){
 	errors += runNonterminal("define");
 	errors += runNonterminal("more_defines");
-	ending("more_defines", token, errors);
     } else if (rule == 4){
-	ending("more_defines", token, errors);
+        //Do nothing for lambda.
     }
+    ending(nonTerminal, token, errors);
     return errors;
 }
 
@@ -219,21 +233,19 @@ int SyntacticalAnalyzer::stmt_list(){
 	vector<int>expected_vector(array, array+5);
 	errors += enforce(token,expected_vector);
 	if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
 	    return errors;
 	}
 	rule = GetRule(3,token);
-    }
-    if(token == EOF_T) {
-	return errors;
     }
     rules.startNonterminal(rule);
     if(rule == 5){
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt_list");
-	ending("stmt_list", token, errors);
     } else if (rule == 6){
-	ending("stmt_list", token, errors);
+        //Do nothing for lambda.
     }
+    ending(nonTerminal, token, errors);
     return errors;
 }
 
@@ -251,6 +263,7 @@ int SyntacticalAnalyzer::stmt(){
 	vector<int>expected_vector(array, array+4);
 	errors += enforce(token,expected_vector);
 	if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
 	    return errors;
 	}
 	rule = GetRule(4,token);
@@ -258,11 +271,9 @@ int SyntacticalAnalyzer::stmt(){
     rules.startNonterminal(rule);
     if (rule == 7){
 	errors += runNonterminal("literal");	
-	ending("stmt", token, errors);
     } else if (rule == 8){
 	rules.addToken(token);
 	token = NextToken();	//Get one additional token
-	ending("stmt", token, errors);
     } else if (rule == 9){
 	rules.addToken(token);
 	token = NextToken();
@@ -271,12 +282,15 @@ int SyntacticalAnalyzer::stmt(){
 	vector<int>expected_vector;
 	expected_vector.push_back(RPAREN_T);
 	errors += enforce(token, expected_vector);
-	if(token == EOF_T) {return errors;}
 	expected_vector.clear();
+	if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+            return errors;
+        }
 		
 	token = NextToken();	//Get one additional token
-	ending("stmt", token, errors);
     }
+    ending(nonTerminal, token, errors);
     return errors;
 }
 
@@ -294,22 +308,25 @@ int SyntacticalAnalyzer::literal(){
 	int array[2] = {NUMLIT_T, QUOTE_T};
 	vector<int>expected_vector(array, array+2);
 	errors += enforce(token,expected_vector);
+        if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+	    return errors;
+	}
+
 	rule = GetRule(5,token);
     }
-    if(token == EOF_T) {return errors;}
     rules.startNonterminal(rule);
-    if (rule == 10) { // NUMLIT_T
+    if (rule == 10) {
 	rules.addToken(token);
 	token = NextToken();	//Get one additional token
-	ending("literal", token, errors);
-    } else if (rule == 11) { // QUOTE_T <quoted_lit>
+    } else if (rule == 11) {
 	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("quoted_lit");
-	ending("literal", token, errors);
 
     }
 
+    ending(nonTerminal, token, errors);
     return errors;
 }
 
@@ -329,16 +346,20 @@ int SyntacticalAnalyzer::quoted_lit() {
 			 STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
 	vector<int>expected_vector(array, array+30);
 	errors += enforce(token,expected_vector);
+        if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+	    return errors;
+	}
+
 	rule = GetRule(6, token);
     }
-    if(token == EOF_T) {return errors;}
     rules.startNonterminal(rule);
     if (rule == 12) {
 	errors += runNonterminal("any_other_token");
-	ending("quoted_lit", token, errors);
 
     }
 
+    ending("quoted_lit", token, errors);
     return errors;
 
 }
@@ -358,18 +379,22 @@ int SyntacticalAnalyzer::more_tokens(){
 			 STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
 	vector<int>expected_vector(array, array+30);
 	errors += enforce(token,expected_vector);
+        if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+	    return errors;
+	}
+
 	rule = GetRule(7,token);
     }
-    if(token == EOF_T) {return errors;}
     rules.startNonterminal(rule);
     if (rule == 13) {
 	errors += runNonterminal("any_other_token");
 	errors += runNonterminal("more_tokens");
-	ending("more_tokens", token, errors);
     } else if (rule == 14) {
-	ending("more_tokens", token, errors);
+        //Do nothing for lambda.
     }
 
+    ending(nonTerminal, token, errors);
     return errors;
 }
 
@@ -387,19 +412,23 @@ int SyntacticalAnalyzer::param_list(){
 	int array[2] = {IDENT_T, RPAREN_T};
 	vector<int>expected_vector(array, array+2);
 	errors += enforce(token,expected_vector);
+        if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+	    return errors;
+	}
+
 	rule = GetRule(8, token);
     }
-    if(token == EOF_T) {return errors;}
     rules.startNonterminal(rule);
     if (rule == 15) {
 	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("param_list");
-	ending("param_list", token, errors);
 
     } else if (rule == 16) {
-	ending("param_list", token, errors);
+	//Do nothing for lambda.
     }
+    ending(nonTerminal, token, errors);
     return errors;
 }
 
@@ -416,17 +445,21 @@ int SyntacticalAnalyzer::else_part(){
 	int array[5] = {NUMLIT_T, IDENT_T, QUOTE_T, LPAREN_T, RPAREN_T};
 	vector<int>expected_vector(array, array+5);
 	errors += enforce(token,expected_vector);
+        if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+	    return errors;
+	}
+
 	rule = GetRule(9,token);
     }
-    if(token == EOF_T) {return errors;}
     rules.startNonterminal(rule);
     if (rule == 17) {
 	errors += runNonterminal("stmt");
-	ending("else_part", token, errors);
 
     } else if (rule == 18) {
-	ending("else_part", token, errors);
+        //Do nothing for lambda.
     }
+    ending("else_part", token, errors);
     return errors;
 }
 
@@ -445,9 +478,13 @@ int SyntacticalAnalyzer::action(){
 			 DIV_T, MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, RPAREN_T};
 	vector<int>expected_vector(array, array+26);
 	errors += enforce(token,expected_vector);
+        if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+	    return errors;
+	}
+
 	rule = GetRule(10,token);
     }
-    if(token == EOF_T) {return errors;}
     rules.startNonterminal(rule);
     switch (rule) {
     case 19:
@@ -505,7 +542,7 @@ int SyntacticalAnalyzer::action(){
 	break;
     }
 
-    ending("action", token, errors);
+    ending(nonTerminal, token, errors);
     return errors;
 }
 
@@ -524,9 +561,13 @@ int SyntacticalAnalyzer::any_other_token(){
 			 STRINGP_T, PLUS_T, MINUS_T, DIV_T ,MULT_T, EQUALTO_T, GT_T, LT_T, GTE_T, LTE_T, LPAREN_T, RPAREN_T, QUOTE_T};
 	vector<int>expected_vector(array, array+30);
 	errors += enforce(token,expected_vector);
+        if(token == EOF_T) {
+	    ending(nonTerminal, token, errors);
+	    return errors;
+	}
+
 	rule = GetRule(11, token);
     }
-    if(token == EOF_T) {return errors;}
     rules.startNonterminal(rule);
     if (rule == 44) {
 	rules.addToken(token);
@@ -538,7 +579,7 @@ int SyntacticalAnalyzer::any_other_token(){
 	rules.addToken(token);
 	token = NextToken();	//Get one additional lexeme
     }
-    ending("any_other_token", token, errors);
+    ending(nonTerminal, token, errors);
     return errors;
 
 }
