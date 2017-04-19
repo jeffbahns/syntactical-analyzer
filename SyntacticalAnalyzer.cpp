@@ -472,6 +472,7 @@ int SyntacticalAnalyzer::action(){
         rules.addToken(token);
         token = NextToken();
         errors += runNonterminal("stmt_list");
+        break;
     case 24 ... 31:
 	rules.addToken(token);
 	token = NextToken();
