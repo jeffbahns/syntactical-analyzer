@@ -2,7 +2,18 @@
 /* Project: 2, Syntactical Analyzer 	      					*/
 /* Author: Jeff Bahns, Erich Bucher, Jordan Bergero		    		*/
 /* Date: 4/16/2017							    	*/
-/* Description:	A syntactical analyzer built on top of Project 1     	     	*/
+/* Description:	A syntactical analyzer built on top of Project 1. When a new    */
+/* 		SyntacticalAnalyzer object is created, it will open up the      */
+/*		file given as the constructors argument, parse through it, and  */
+/*		write out information to the following files:			*/
+/*		.p2 file:  A list of when each nonterminal begins and ends,	*/
+/*			   which rule starts the nonterminals, the first	*/
+/*			   token of each nonterminal, and the number of errors  */
+/*		.dbg file: Each line of the input file, followed by the tokens  */
+/*			   in that line and the nonterminals beginning or	*/
+/*			   beginning.						*/
+/*		.lst file: All of the lines from the input file, followed by	*/
+/*			   all of the lexical and syntactical errors.		*/
 /********************************************************************************/
 
 #include <iostream>
