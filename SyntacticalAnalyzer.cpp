@@ -10,7 +10,6 @@
 #include <cstring>
 #include <fstream>
 #include "SyntacticalAnalyzer.h"
-#include "RuleMonitor.h"
 
 using namespace std;
 
@@ -37,7 +36,6 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
     /* This function will								*/
     /********************************************************************************/
     lex = new LexicalAnalyzer (filename);
-    rules.setLex(lex);
     token = AND_T;
     int fnlength = strlen (filename);
     filename[fnlength-2] = 'p';
@@ -88,7 +86,6 @@ int SyntacticalAnalyzer::program (){
         rule = GetRule(0,token);	  
     }
 
-    rules.startNonterminal(rule);
     if (rule == 1){
 	errors += runNonterminal("define");
 	errors += runNonterminal("more_defines");
@@ -100,7 +97,6 @@ int SyntacticalAnalyzer::program (){
     }
 
     ending(nonTerminal, token, errors);
-    rules.printToFile();
     cout << "Errors: " << errors << endl;
     return errors;
 }      
@@ -129,9 +125,7 @@ int SyntacticalAnalyzer::define(){
 	rule = GetRule(1,token);
     }
 
-    rules.startNonterminal(rule);
     if (rule == 2){
-	rules.addToken(token);
 	token = NextToken();
 	vector<int>expected_vector;
 	expected_vector.push_back(DEFINE_T);
@@ -208,7 +202,6 @@ int SyntacticalAnalyzer::more_defines(){
 	}
 	rule = GetRule(2,token);
     }
-    rules.startNonterminal(rule);
     if (rule == 3){
 	errors += runNonterminal("define");
 	errors += runNonterminal("more_defines");
@@ -238,7 +231,6 @@ int SyntacticalAnalyzer::stmt_list(){
 	}
 	rule = GetRule(3,token);
     }
-    rules.startNonterminal(rule);
     if(rule == 5){
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt_list");
@@ -268,14 +260,11 @@ int SyntacticalAnalyzer::stmt(){
 	}
 	rule = GetRule(4,token);
     }
-    rules.startNonterminal(rule);
     if (rule == 7){
 	errors += runNonterminal("literal");	
     } else if (rule == 8){
-	rules.addToken(token);
 	token = NextToken();	//Get one additional token
     } else if (rule == 9){
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("action");
 		
@@ -315,12 +304,9 @@ int SyntacticalAnalyzer::literal(){
 
 	rule = GetRule(5,token);
     }
-    rules.startNonterminal(rule);
     if (rule == 10) {
-	rules.addToken(token);
 	token = NextToken();	//Get one additional token
     } else if (rule == 11) {
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("quoted_lit");
 
@@ -353,7 +339,6 @@ int SyntacticalAnalyzer::quoted_lit() {
 
 	rule = GetRule(6, token);
     }
-    rules.startNonterminal(rule);
     if (rule == 12) {
 	errors += runNonterminal("any_other_token");
 
@@ -386,7 +371,6 @@ int SyntacticalAnalyzer::more_tokens(){
 
 	rule = GetRule(7,token);
     }
-    rules.startNonterminal(rule);
     if (rule == 13) {
 	errors += runNonterminal("any_other_token");
 	errors += runNonterminal("more_tokens");
@@ -419,9 +403,7 @@ int SyntacticalAnalyzer::param_list(){
 
 	rule = GetRule(8, token);
     }
-    rules.startNonterminal(rule);
     if (rule == 15) {
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("param_list");
 
@@ -452,7 +434,6 @@ int SyntacticalAnalyzer::else_part(){
 
 	rule = GetRule(9,token);
     }
-    rules.startNonterminal(rule);
     if (rule == 17) {
 	errors += runNonterminal("stmt");
 
@@ -485,59 +466,49 @@ int SyntacticalAnalyzer::action(){
 
 	rule = GetRule(10,token);
     }
-    rules.startNonterminal(rule);
+   
     switch (rule) {
     case 19:
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("else_part");
 	break;
     case 20:
-	rules.addToken(token);
-	token = NextToken();
-	errors += runNonterminal("stmt");
-	break;
+      token = NextToken();
+      errors += runNonterminal("stmt");
+      break;
     case 21:
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt");
 	break;
     case 22 ... 23:
-        rules.addToken(token);
         token = NextToken();
         errors += runNonterminal("stmt_list");
         break;
     case 24 ... 31:
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	break;
     case 32:
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt_list");
 	break;
     case 33 ... 34:
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	errors += runNonterminal("stmt_list");
 	break;
     case 35 ... 41:
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt_list");
 	break;
     case 42:
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("stmt");
 	break;
     case 43:
-	rules.addToken(token);
 	token = lex ->GetToken();
 	break;
     }
@@ -568,15 +539,11 @@ int SyntacticalAnalyzer::any_other_token(){
 
 	rule = GetRule(11, token);
     }
-    rules.startNonterminal(rule);
     if (rule == 44) {
-	rules.addToken(token);
 	token = NextToken();
 	errors += runNonterminal("more_tokens");
-	rules.addToken(token);
 	token = NextToken();	//Get one additional lexeme
     } else if (rule >= 45 && rule <= 72) {
-	rules.addToken(token);
 	token = NextToken();	//Get one additional lexeme
     }
     ending(nonTerminal, token, errors);
@@ -610,7 +577,6 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
     if (nonTerm != "program") {
 	p2file << "\n";
     }
-    rules.endNonterminal();
 }
 
 /** 
@@ -623,7 +589,6 @@ int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) 
     bool flag = true;
     for(int i=0; i<expected_vector.size(); i++){
 	if(expected_vector[i] == token){
-	    rules.addToken(token);
 	    return errors;
 	}
     }
@@ -635,7 +600,6 @@ int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) 
 	    }
 	}
 	lstfile << "Error, this token was not expected: " << token << endl;
-	rules.addToken(token);
 	errors ++;
     }
 
@@ -662,7 +626,6 @@ token_type SyntacticalAnalyzer::NextToken(){
  * object.
  */
 int SyntacticalAnalyzer::runNonterminal(string n){
-    rules.addNonterminal(n);
     if(n == "program")
 	return program();
     if(n == "define")

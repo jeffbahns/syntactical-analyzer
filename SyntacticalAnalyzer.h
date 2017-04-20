@@ -43,7 +43,6 @@ class SyntacticalAnalyzer
         int enforce(token_type &token, vector<int>expected_vector);
 	int runNonterminal(string n);
 	token_type NextToken();
-	RuleMonitor rules;
 };
 	
 #endif
