@@ -65,6 +65,7 @@ SyntacticalAnalyzer::~SyntacticalAnalyzer ()
   ***************************************************/
     p2file.close();
     lstfile.close();
+    cout << "Lexical errors: ";
     delete lex;
 }
 
@@ -105,7 +106,7 @@ int SyntacticalAnalyzer::program (){
     }
 
     ending(nonTerminal, token, errors);
-    cout << "Errors: " << errors << endl;
+    cout << "Syntactical errors: " << errors << " errors found in input file" << endl;
     return errors;
 }      
 
