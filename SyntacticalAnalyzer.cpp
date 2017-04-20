@@ -48,10 +48,13 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
     filename[fnlength-1] = 's';
     std::string lstFilename(filename);
     lstFilename += 't';
-    lstfile.open (lstFilename.c_str(), std::ofstream::app);
+    lstfile.open (lstFilename.c_str(), std::ofstream::out | std::ofstream::app);
 
     token = NextToken();
     int errors = program ();
+    lstfile << lstOutput<< endl;
+    lstfile << "Errors found during syntactical analysis: " << errors << endl;
+    lstOutput = "";
 }
 
 /******
@@ -605,9 +608,18 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
 int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) {
     int errors = 0;
     bool flag = true;
+    string expected_tokens = "<";
     for(int i=0; i<expected_vector.size(); i++){
-	if(expected_vector[i] == token){
-	    return errors;
+	expected_tokens += lex->GetTokenName((token_type)expected_vector.at(i));
+	if (i+1 != expected_vector.size()) {
+	    expected_tokens += ", ";
+	}
+    }
+    expected_tokens += ">";
+
+    for(int i=0; i<expected_vector.size(); i++){
+	if(expected_vector[i] == token || token == EOF_T){
+	    flag = false;
 	}
     }
     while(flag){
@@ -617,7 +629,8 @@ int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) 
 		flag = false;
 	    }
 	}
-	lstfile << "Error, this token was not expected: " << token << endl;
+	cout << "Error, token expected: " << expected_tokens << " , received: " << lex->GetTokenName(token) << endl;
+	lstOutput += "Error, token expected: " + expected_tokens + " , received: " + lex->GetTokenName(token) + "\n";
 	errors ++;
     }
 
