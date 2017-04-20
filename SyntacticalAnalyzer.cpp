@@ -205,9 +205,10 @@ int SyntacticalAnalyzer::define(){
  **/
 int SyntacticalAnalyzer::more_defines(){
   /********************************************************************                                                                                               
-  /* This funciton will take in a token, and it should be LPAREN_T,                                                                                                   
-  /* this will then start the chain reaction of function calls to build                                                                                               
-  /* out the rest of the syntactical analyzer.                                                                                                                        
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
   *********************************************************************/
     int rule = GetRule(2, token);
     int errors = 0;
@@ -237,7 +238,14 @@ int SyntacticalAnalyzer::more_defines(){
  *  called when non-terminating stmt_list() is reached
  **/
 int SyntacticalAnalyzer::stmt_list(){
-    int rule = GetRule(3, token);
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+
+  int rule = GetRule(3, token);
     int errors = 0;
     string nonTerminal = "stmt_list";
     print(nonTerminal, token, rule);
@@ -266,7 +274,13 @@ int SyntacticalAnalyzer::stmt_list(){
  * called when non-terminating stmt_() is reached
  */
 int SyntacticalAnalyzer::stmt(){
-    int rule = GetRule(4,token);
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+  int rule = GetRule(4,token);
     int errors = 0;
     string nonTerminal = "stmt";
     print(nonTerminal, token, rule);
@@ -308,8 +322,14 @@ int SyntacticalAnalyzer::stmt(){
  * called when non-terminating literal() is reached
  **/
 int SyntacticalAnalyzer::literal(){
-    int errors = 0;
-	
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+
+  int errors = 0;
     int rule = GetRule(5,token);
     string nonTerminal = "literal";
     print(nonTerminal, token, rule);
@@ -342,7 +362,14 @@ int SyntacticalAnalyzer::literal(){
  * called when non-terminating literal() is reached
  **/
 int SyntacticalAnalyzer::quoted_lit() {
-    int errors = 0;
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+
+  int errors = 0;
 	
     int rule = GetRule(6,token);
     string nonTerminal = "quoted_lit";
@@ -374,8 +401,13 @@ int SyntacticalAnalyzer::quoted_lit() {
  * called when non-terminating more_tokens() is reached
  **/
 int SyntacticalAnalyzer::more_tokens(){
-    int errors = 0;
-	
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+  int errors = 0;
     int rule = GetRule(7,token);
     string nonTerminal = "more_tokens";
     print(nonTerminal, token, rule);
@@ -407,8 +439,13 @@ int SyntacticalAnalyzer::more_tokens(){
  * called when non-terminating param_list() is reached
  **/
 int SyntacticalAnalyzer::param_list(){
-    int errors = 0;
-	
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+  int errors = 0;
     int rule = GetRule(8,token);
     string nonTerminal = "param_list";
     print(nonTerminal, token, rule);
@@ -439,6 +476,13 @@ int SyntacticalAnalyzer::param_list(){
  * called when non-terminating else_part() is reached
  **/
 int SyntacticalAnalyzer::else_part(){
+    /********************************************************************             
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+
     int errors = 0;
     int rule = GetRule(9, token);
     string nonTerminal = "else_part";
@@ -469,7 +513,13 @@ int SyntacticalAnalyzer::else_part(){
  * called when non-terminating action() is reached
  **/
 int SyntacticalAnalyzer::action(){
-    int errors = 0;
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+  int errors = 0;
     int rule = GetRule(10, token);
     string nonTerminal = "action";
     print(nonTerminal, token, rule);
@@ -542,8 +592,14 @@ int SyntacticalAnalyzer::action(){
  * called when non-terminating any_other_token() is reached
  **/
 int SyntacticalAnalyzer::any_other_token(){
-    int errors = 0;
-	
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token,
+  /* find a rule number for it, and proceed with the rule it recieves
+  /* If the rule is -1, we will cycle through the tokens until we get a
+  /* token we want, incrementing the errors until then
+  *********************************************************************/
+
+  int errors = 0;
     int rule = GetRule(11, token);
     string nonTerminal = "any_other_token";
     print(nonTerminal, token, rule);
@@ -573,14 +629,21 @@ int SyntacticalAnalyzer::any_other_token(){
 }
 
 /**
- * helper, which is used to index the rules table
+ * Description:	Helper, which is used to index the rules table. 
  **/
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
     return firstsTable[row][col];
 }
 
 /**
- * helper, prints starting statements for non-terminators
+ * Description:	Prints out the following information to the following files:
+ * 		.p2 file:	The nonterminal that is beginning, the first token of it,
+ * 				and the rule that is being used for it.
+ * 		.dbg file:	The nonterminal that is beginning and what rule is being used
+ * 				for it.
+ *
+ * Pre:		A new nonterminal starting to be read in and the first token of it is stored
+ * 		in token.
  **/
 void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
     p2file << "Starting <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << endl;
@@ -589,8 +652,16 @@ void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
   
 }
 
+
 /** 
- * helper, prints ending statement
+ * Description:	Prints out the following information to the following files:
+ * 		.p2 file: 	The nonterminal that is ending, the next proceding token from
+ * 			  	the input file, and the number of errors that were encountered
+ * 			  	in that nonterminal.
+ * 		.dbg file: 	The nonterminal that is ending.
+ *
+ * Pre:		A nonterminal has finished being read in and the token being stored in token
+ * 		is the next token from the file after the nonterminal.
  **/
 void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
     p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors;
@@ -600,10 +671,22 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
     }
 }
 
+
 /** 
- * Forces the code to continue to read in tokens until you find one that is valid, based on
- * the current rule that is being worked on. If the end of the file is reached, the function
- * will also end and token will be equal to EOF_T.
+ * Description:	Forces the lexical analyzer to continue to read in tokens until you find
+ * 		one that is valid, based on the current rule that is being worked on.
+ * 		If the end of the file is reached, the function will also end and token
+ * 		will be equal to EOF_T. Every time that a new token is read in because
+ * 		there are no matches, the error counter will increase.
+ *
+ * Pre:		token has been initialized.
+ * 		expected_vector should contain ints that correspond with token values
+ * 		that are valid for the given token to be equal to so that it satisfies
+ * 		a specific rule.
+ *
+ * Post:	The number of new tokens read in will be returned.
+ * 		token will be changed to a new token from the input file if it was
+ * 		not originally in the expected_vector.
  **/
 int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) {
     int errors = 0;
@@ -639,22 +722,23 @@ int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) 
 
 
 /**
- * Use this function in place of lex->GetTokenName(). It makes it easier if you want to
- * add cout statements to print out the tokens as you get them.
+ * Description:	Use this function in place of lex->GetTokenName(). It makes it easier if you want to
+ * 		add cout statements to print out the tokens as you get them.
  **/
 token_type SyntacticalAnalyzer::NextToken(){
     token_type t = lex->GetToken();
-    //char c;
-    //cout << "Picked up a " << lex->GetTokenName(t) << endl;
-    //cin >> c;
     return t;
 }
 
 
 /**
- * This function will run the appropriate nonTerminal function, based on the given
- * string. It will also add the nonterminal to the current rule in the RuleMonitor
- * object.
+ * Description:	This function will run the appropriate nonTerminal function, based on the given
+ * 		string. It will also add the nonterminal to the current rule in the RuleMonitor
+ * 		object.
+ * 
+ * Pre:		n is the name of a nonterminal (without the < and > around it).
+ *
+ * Post:	one of the nonterminal functions will be run.
  */
 int SyntacticalAnalyzer::runNonterminal(string n){
     if(n == "program")
@@ -681,5 +765,5 @@ int SyntacticalAnalyzer::runNonterminal(string n){
 	return action();
     if(n == "any_other_token")
 	return any_other_token();
-    return 1000000;
+    return 1000000; //This will never be called.
 } 
