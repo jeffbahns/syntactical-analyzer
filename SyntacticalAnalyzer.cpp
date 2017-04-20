@@ -601,6 +601,7 @@ void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
   
 }
 
+
 /** 
  * helper, prints ending statement
  **/
@@ -613,8 +614,9 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
     rules.endNonterminal();
 }
 
+
 /** 
- * Forces the code to continue to read in tokens until you find one that is valid, based on
+ * Description:	Forces the code to continue to read in tokens until you find one that is valid, based on
  * the current rule that is being worked on. If the end of the file is reached, the function
  * will also end and token will be equal to EOF_T.
  **/
@@ -644,22 +646,23 @@ int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) 
 
 
 /**
- * Use this function in place of lex->GetTokenName(). It makes it easier if you want to
- * add cout statements to print out the tokens as you get them.
+ * Description:	Use this function in place of lex->GetTokenName(). It makes it easier if you want to
+ * 		add cout statements to print out the tokens as you get them.
  **/
 token_type SyntacticalAnalyzer::NextToken(){
     token_type t = lex->GetToken();
-    //char c;
-    //cout << "Picked up a " << lex->GetTokenName(t) << endl;
-    //cin >> c;
     return t;
 }
 
 
 /**
- * This function will run the appropriate nonTerminal function, based on the given
- * string. It will also add the nonterminal to the current rule in the RuleMonitor
- * object.
+ * Description:	This function will run the appropriate nonTerminal function, based on the given
+ * 		string. It will also add the nonterminal to the current rule in the RuleMonitor
+ * 		object.
+ * 
+ * Pre:		n is the name of a nonterminal (without the < and > around it).
+ *
+ * Post:	one of the nonterminal functions will be run.
  */
 int SyntacticalAnalyzer::runNonterminal(string n){
     rules.addNonterminal(n);
@@ -687,5 +690,5 @@ int SyntacticalAnalyzer::runNonterminal(string n){
 	return action();
     if(n == "any_other_token")
 	return any_other_token();
-    return 1000000;
+    return 1000000; //This will never be called.
 } 
