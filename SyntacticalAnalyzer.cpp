@@ -33,10 +33,12 @@ int firstsTable[][33] =
 SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 {
     /********************************************************************************/
-    /* This function will								*/
+       /* This function is the default constructor of the Syntactical Analyzer
+       /* It will create the output files <testing>.lst, <testing>.p2 
+       /* Then it sets our global private member token to the token that starts the
+       /* program. This should be a LPAREN_T. It then calls program. 
     /********************************************************************************/
     lex = new LexicalAnalyzer (filename);
-    token = AND_T;
     int fnlength = strlen (filename);
     filename[fnlength-2] = 'p';
     filename[fnlength-1] = '2';
@@ -52,11 +54,15 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
     int errors = program ();
 }
 
-/**
+/******
  * destructor
  **/
 SyntacticalAnalyzer::~SyntacticalAnalyzer ()
 {
+  /************************************************* 
+  /* close the files that we opened 
+  /* Delete our instance of the lexical analyzer
+  ***************************************************/
     p2file.close();
     lstfile.close();
     delete lex;
@@ -67,7 +73,9 @@ SyntacticalAnalyzer::~SyntacticalAnalyzer ()
  **/
 int SyntacticalAnalyzer::program (){
     /********************************************************************************/
-    /* This function will								*/
+    /* This function will take in a token and find a rule. Ultimately, the token is 
+    /* a LPAREN_T and we get rule 1, and we define, upon when define returns we will
+    /* call more_defines, until we hit a lambda in there and  get to the EOF_T
     /********************************************************************************/
     int errors = 0;
 	
@@ -105,6 +113,11 @@ int SyntacticalAnalyzer::program (){
  * called when non-terminating define() is reached
  **/
 int SyntacticalAnalyzer::define(){
+  /********************************************************************
+  /* This funciton will take in a token, and it should be LPAREN_T, 
+  /* this will then start the chain reaction of function calls to build
+  /* out the rest of the syntactical analyzer.
+  *********************************************************************/
     int errors = 0;
 	
     int rule = GetRule(1,token);
@@ -188,6 +201,11 @@ int SyntacticalAnalyzer::define(){
  *  called when non-terminating more_defines() is reached
  **/
 int SyntacticalAnalyzer::more_defines(){
+  /********************************************************************                                                                                               
+  /* This funciton will take in a token, and it should be LPAREN_T,                                                                                                   
+  /* this will then start the chain reaction of function calls to build                                                                                               
+  /* out the rest of the syntactical analyzer.                                                                                                                        
+  *********************************************************************/
     int rule = GetRule(2, token);
     int errors = 0;
     string nonTerminal = "more_defines";
