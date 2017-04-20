@@ -552,14 +552,21 @@ int SyntacticalAnalyzer::any_other_token(){
 }
 
 /**
- * helper, which is used to index the rules table
+ * Description:	Helper, which is used to index the rules table. 
  **/
 int SyntacticalAnalyzer::GetRule(int row, token_type col){
     return firstsTable[row][col];
 }
 
 /**
- * helper, prints starting statements for non-terminators
+ * Description:	Prints out the following information to the following files:
+ * 		.p2 file:	The nonterminal that is beginning, the first token of it,
+ * 				and the rule that is being used for it.
+ * 		.dbg file:	The nonterminal that is beginning and what rule is being used
+ * 				for it.
+ *
+ * Pre:		A new nonterminal starting to be read in and the first token of it is stored
+ * 		in token.
  **/
 void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
     p2file << "Starting <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << endl;
@@ -570,7 +577,14 @@ void SyntacticalAnalyzer::print(string nonTerm, token_type token, int rule){
 
 
 /** 
- * helper, prints ending statement
+ * Description:	Prints out the following information to the following files:
+ * 		.p2 file: 	The nonterminal that is ending, the next proceding token from
+ * 			  	the input file, and the number of errors that were encountered
+ * 			  	in that nonterminal.
+ * 		.dbg file: 	The nonterminal that is ending.
+ *
+ * Pre:		A nonterminal has finished being read in and the token being stored in token
+ * 		is the next token from the file after the nonterminal.
  **/
 void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
     p2file << "Ending <" << nonTerm << ">. Current token = " << lex->GetTokenName(token) << ". Errors = " << errors;
@@ -582,9 +596,20 @@ void SyntacticalAnalyzer::ending(string nonTerm, token_type token, int errors){
 
 
 /** 
- * Description:	Forces the code to continue to read in tokens until you find one that is valid, based on
- * the current rule that is being worked on. If the end of the file is reached, the function
- * will also end and token will be equal to EOF_T.
+ * Description:	Forces the lexical analyzer to continue to read in tokens until you find
+ * 		one that is valid, based on the current rule that is being worked on.
+ * 		If the end of the file is reached, the function will also end and token
+ * 		will be equal to EOF_T. Every time that a new token is read in because
+ * 		there are no matches, the error counter will increase.
+ *
+ * Pre:		token has been initialized.
+ * 		expected_vector should contain ints that correspond with token values
+ * 		that are valid for the given token to be equal to so that it satisfies
+ * 		a specific rule.
+ *
+ * Post:	The number of new tokens read in will be returned.
+ * 		token will be changed to a new token from the input file if it was
+ * 		not originally in the expected_vector.
  **/
 int SyntacticalAnalyzer::enforce(token_type &token, vector<int>expected_vector) {
     int errors = 0;
