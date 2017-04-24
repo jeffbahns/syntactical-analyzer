@@ -145,3 +145,33 @@
       (slob (cdr mylist))
       )
   )
+
+(define (bareback mountain)
+  '(
+    and 
+    or
+    not
+    if
+    display
+    cdr
+    cons
+    define
+    666
+    ()
+    0
+    'a
+    null
+    a
+    string
+    +
+    -
+    /
+    *
+    =
+    >
+    <
+    >=
+    <=
+    'hellobro
+    )
+  )
