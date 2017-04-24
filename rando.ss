@@ -1,6 +1,6 @@
 ; This is a very small test file
 
-(define (main)
+))(define (main)
 	(display (car '(a b (car ls))))
 	(newline)
 )
