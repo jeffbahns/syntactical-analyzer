@@ -31,7 +31,7 @@
 (define (last mylist)
   (if (null? (cdr mylist))
       (car mylist)
-      (last (cdr mylist))
+      
       )
   )
 
@@ -174,4 +174,32 @@
     <=
     'hellobro
     )
+  )
+(define (boo)
+  (number?12)  
+  )
+(define (boo)
+  (symbol?(car'(a)))
+  
+  )
+
+(define (boo)
+  (null?'())
+  
+  )
+(define (boo thing thing thing)
+  (list?'())
+  
+  )
+(define (boo)
+  (zero?0)
+  
+  )
+
+(define (boo)
+  (char?(car '(a))) 
+  )
+
+(define (boo)
+  (string?'(hello))
   )
